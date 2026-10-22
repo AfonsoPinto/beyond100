@@ -1,0 +1,38 @@
+name: Update Beyond100
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # every 30 min (GitHub may delay a few minutes)
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: update
+  cancel-in-progress: false
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements.txt
+      - run: sudo apt-get install -y fonts-dejavu-core fonts-liberation
+      - name: Build results + site
+        env:
+          LIVETENNIS_KEY: ${{ secrets.LIVETENNIS_KEY }}
+        run: |
+          python result_card.py --live --max 5 --out out
+          python result_card.py --results --max-checks 20 --out out
+          python result_card.py --page
+      - name: Save state (public display data only)
+        run: |
+          git config user.name "beyond100-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -f tracked.json results.json ranks.json || true
+          if ! git diff --cached --quiet; then git commit -m "Update state"; git push; fi
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy site --project-name=beyond100
