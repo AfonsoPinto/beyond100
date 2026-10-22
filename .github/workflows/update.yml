@@ -1,7 +1,7 @@
 name: Update Beyond100
 on:
   schedule:
-    - cron: "*/30 * * * *"   # every 30 min (GitHub may delay a few minutes)
+    - cron: "7 * * * *"   # every 30 min (GitHub may delay a few minutes)
   workflow_dispatch: {}
 permissions:
   contents: write
@@ -22,7 +22,7 @@ jobs:
           LIVETENNIS_KEY: ${{ secrets.LIVETENNIS_KEY }}
         run: |
           python result_card.py --live --max 5 --out out
-          python result_card.py --results --max-checks 20 --out out
+          python result_card.py --results --max-checks 2 --out out
           python result_card.py --page
       - name: Save state (public display data only)
         run: |
