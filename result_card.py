@@ -585,10 +585,29 @@ def _shell(title, body, tx):
     return (f'<!doctype html>\n<html lang="{LANG}"><head><meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
             f'<title>{esc(title)}</title>\n<meta name="theme-color" content="#0e3a2d">\n'
+            '<link rel="icon" href="favicon.svg" type="image/svg+xml">\n'
+            '<link rel="icon" href="favicon.png" sizes="192x192" type="image/png">\n'
+            '<link rel="apple-touch-icon" href="favicon.png">\n'
             f'<style>{SITE_CSS}</style></head><body><div class="wrap">\n'
             f'<nav><a class="brand" href="index.html">BEYOND100</a><div>'
             f'<a href="results.html">{esc(tx["nav"])}</a><a href="{IG_URL}">Instagram</a></div></nav>\n'
             f'{body}\n<footer>{esc(tx["note"])}</footer></div></body></html>')
+
+
+FAVICON_SVG = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0e3a2d"/>'
+               '<circle cx="32" cy="32" r="25" fill="none" stroke="#f4efe0" stroke-width="3"/>'
+               '<text x="32" y="40" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="22" fill="#d9f23a">100</text></svg>')
+
+
+def write_favicons(out_dir):
+    with open(os.path.join(out_dir, "favicon.svg"), "w", encoding="utf-8") as f:
+        f.write(FAVICON_SVG)
+    S = 192
+    im = Image.new("RGB", (S, S), (14, 58, 45))
+    d = ImageDraw.Draw(im)
+    d.ellipse((14, 14, S - 14, S - 14), outline=(244, 239, 224), width=8)
+    d.text((S / 2, S / 2 + 2), "100", font=font(FONT_SERIF_B, 62), fill=(217, 242, 58), anchor="mm")
+    im.save(os.path.join(out_dir, "favicon.png"))
 
 
 def build_site(out_dir="site", player=None):
@@ -609,6 +628,7 @@ def build_site(out_dir="site", player=None):
     page = (f'<section class="page-h"><h1>{esc(tx["title"])}</h1><p>{esc(tx["lead"])}</p></section>'
             f'{_results_html(results, tr, tx["empty"])}')
     paths = []
+    write_favicons(out_dir)
     for name, body, title in [("index.html", home, "Beyond100 · Tennis beyond the top 100"),
                               ("results.html", page, "Beyond100 · " + tx["title"])]:
         path = os.path.join(out_dir, name)
