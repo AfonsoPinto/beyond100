@@ -1,7 +1,7 @@
 name: Update Beyond100
 on:
   schedule:
-    - cron: "7 * * * *"   # every 30 min (GitHub may delay a few minutes)
+    - cron: "*/30 * * * *"   # every hour (free API tier: 100 requests/day)
   workflow_dispatch: {}
 permissions:
   contents: write
@@ -22,13 +22,15 @@ jobs:
           LIVETENNIS_KEY: ${{ secrets.LIVETENNIS_KEY }}
         run: |
           python result_card.py --live --max 5 --out out
-          python result_card.py --results --max-checks 2 --out out
+          python result_card.py --results --max-checks 20 --out out
           python result_card.py --page
       - name: Save state (public display data only)
         run: |
           git config user.name "beyond100-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add -f tracked.json results.json ranks.json || true
+          for f in tracked.json results.json ranks.json; do
+            if [ -f "$f" ]; then git add -f "$f"; fi
+          done
           if ! git diff --cached --quiet; then git commit -m "Update state"; git push; fi
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
