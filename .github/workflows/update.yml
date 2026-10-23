@@ -20,10 +20,19 @@ jobs:
       - name: Build results + site
         env:
           LIVETENNIS_KEY: ${{ secrets.LIVETENNIS_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           python result_card.py --live --max 5 --out out
           python result_card.py --results --max-checks 20 --out out
           python result_card.py --page
+      - name: Keep new cards and captions (7 days)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cards
+          path: out/
+          retention-days: 7
+          if-no-files-found: ignore
       - name: Save state (public display data only)
         run: |
           git config user.name "beyond100-bot"
