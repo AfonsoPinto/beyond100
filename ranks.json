@@ -270,7 +270,7 @@
     "country": "ind",
     "rank": 130,
     "date": "2026-10-23",
-    "ts": 1792771691.7997258
+    "ts": 1792793286.3586447
   },
   "11190": {
     "name": "Valentina Khrebtova",
@@ -333,14 +333,14 @@
     "country": "ita",
     "rank": 329,
     "date": "2026-10-23",
-    "ts": 1792789692.8103423
+    "ts": 1792793286.3714962
   },
   "555": {
     "name": "Oriol Roca Batalla",
     "country": "esp",
     "rank": 304,
     "date": "2026-10-23",
-    "ts": 1792789692.8103423
+    "ts": 1792793286.3714962
   },
   "662": {
     "name": "Ane Mintegi Del Olmo",
@@ -1257,14 +1257,14 @@
     "country": "fra",
     "rank": 48,
     "date": "2026-10-23",
-    "ts": 1792789692.8006904
+    "ts": 1792793286.3605027
   },
   "664": {
     "name": "Lorenzo Musetti",
     "country": "ita",
     "rank": 26,
     "date": "2026-10-23",
-    "ts": 1792789692.8006904
+    "ts": 1792793286.3605027
   },
   "364": {
     "name": "Gray Voelzke",
@@ -1278,21 +1278,21 @@
     "country": "arg",
     "rank": 1909,
     "date": "2026-10-23",
-    "ts": 1792789692.8054693
+    "ts": 1792793286.364191
   },
   "107": {
     "name": "Santiago Rodriguez Taverna",
     "country": "arg",
     "rank": 443,
     "date": "2026-10-23",
-    "ts": 1792789692.8070958
+    "ts": 1792793286.3660216
   },
   "420": {
     "name": "Gustavo Heide",
     "country": "bra",
     "rank": 114,
     "date": "2026-10-23",
-    "ts": 1792789692.8070958
+    "ts": 1792793286.3660216
   },
   "10934": {
     "name": "Miguel Angel Machado",
@@ -1300,5 +1300,40 @@
     "rank": 1620,
     "date": "2026-10-23",
     "ts": 1792789692.8087277
+  },
+  "2651": {
+    "name": "Lan Mi",
+    "country": "chn",
+    "rank": 420,
+    "date": "2026-10-23",
+    "ts": 1792793286.356756
+  },
+  "789": {
+    "name": "Yaroslava Bartashevich",
+    "country": "fra",
+    "rank": 568,
+    "date": "2026-10-23",
+    "ts": 1792793286.356756
+  },
+  "37552": {
+    "name": "Connie Ma",
+    "country": "usa",
+    "rank": 1045,
+    "date": "2026-10-23",
+    "ts": 1792793286.3586447
+  },
+  "192": {
+    "name": "Jenson Brooksby",
+    "country": "usa",
+    "rank": 99,
+    "date": "2026-10-23",
+    "ts": 1792793286.3696628
+  },
+  "11564": {
+    "name": "Patrick Maloney",
+    "country": "usa",
+    "rank": 910,
+    "date": "2026-10-23",
+    "ts": 1792793286.3696628
   }
 }
