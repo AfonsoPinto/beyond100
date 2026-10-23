@@ -23,6 +23,7 @@ Requisitos: py -m pip install pillow requests
 Nota: a chave grátis permite ~100 pedidos/dia. Cada execução com --live usa 1.
 """
 import argparse
+import shutil
 import html
 import json
 import os
@@ -424,6 +425,7 @@ def fetch_match(match_id):
 # ---------- acompanhamento mínimo (só ids, para respeitar os termos de armazenamento) ----------
 STATE_FILE = "tracked.json"
 MIN_AGE_BEFORE_CHECK_S = 45 * 60
+MAX_TRACKED = 12
 TRACK_MAX_AGE_H = 48  # ids mais antigos são apagados
 
 
@@ -508,7 +510,7 @@ PAGE_TEXT = {
            "f_all": "All", "f_men": "Men", "f_women": "Women", "f_singles": "Singles", "f_doubles": "Doubles",
            "f_alltour": "All tournaments", "f_matches": "matches", "f_more": "Show more",
            "f_tournament": "Tournament", "f_player": "Search player", "f_highlights": "Highlights", "f_games": "of games",
-           "f_champion": "Champion", "f_search_tour": "Search tournament", "f_tournaments": "All tournaments",
+           "f_champion": "Champion", "f_bracket": "Bracket", "f_tbd": "To be decided", "f_search_tour": "Search tournament", "f_tournaments": "All tournaments",
            "b_comeback": "Comeback", "b_bagel": "Bagel (6-0)", "b_breadstick": "Breadstick (6-1)",
            "b_super": "Super tie-break", "b_tb": "{n} tie-break", "b_closest": "Closest of the day"},
     "pt": {"title": "Últimos resultados", "lead": "Challenger, ITF e o circuito para lá do top 100.",
@@ -520,7 +522,7 @@ PAGE_TEXT = {
            "f_all": "Todos", "f_men": "Masculino", "f_women": "Feminino", "f_singles": "Singulares", "f_doubles": "Pares",
            "f_alltour": "Todos os torneios", "f_matches": "jogos", "f_more": "Mostrar mais",
            "f_tournament": "Torneio", "f_player": "Pesquisar jogador", "f_highlights": "Destaques", "f_games": "dos jogos",
-           "f_champion": "Campeão", "f_search_tour": "Pesquisar torneio", "f_tournaments": "Todos os torneios",
+           "f_champion": "Campeão", "f_bracket": "Quadro", "f_tbd": "Por apurar", "f_search_tour": "Pesquisar torneio", "f_tournaments": "Todos os torneios",
            "b_comeback": "Virada", "b_bagel": "Set a 0", "b_breadstick": "Set 6-1",
            "b_super": "Super tie-break", "b_tb": "{n} tie-break", "b_closest": "Mais disputado do dia"},
 }
@@ -648,6 +650,8 @@ def build_site(out_dir="site", player=None):
     page = webapp.results_page(results, tr, tx, LANG)
     paths = []
     write_favicons(out_dir)
+    if os.path.isdir("posts"):                         # JPEGs dos posts (o Instagram vai buscá-los a este endereço)
+        shutil.copytree("posts", os.path.join(out_dir, "posts"), dirs_exist_ok=True)
     for name, body, title in [("index.html", home, "Beyond100 · Tennis beyond the top 100"),
                               ("results.html", page, "Beyond100 · " + tx["title"])]:
         path = os.path.join(out_dir, name)
@@ -735,28 +739,115 @@ def upset_event(m):
     }
 
 
-def rising_cards(m, out_dir):
-    from news_card import render_rising
-    os.makedirs(out_dir, exist_ok=True)
+POSTS_FILE = "posts.json"
+POST_MIN_SCORE = float(os.environ.get("POST_MIN_SCORE", "4"))
+MAX_POSTS_PER_DAY = int(os.environ.get("MAX_POSTS_PER_DAY", "3"))
+
+
+def interest(m):
+    """Pontuação de interesse de um jogo terminado (só para escolher o que vale a pena publicar)."""
+    import webapp
+    sets = (m.get("score") or {}).get("sets") or [0, 0]
+    w = winner_index(m)
+    if not w or max(sets) < 2:                      # walkover / desistência: não publicar
+        return 0.0, []
+    score, why = 0.0, []
+    lv = _priority(m)
+    score += {0: 3, 1: 2, 2: 0.5, 3: 0}[lv]
+    if lv <= 1:
+        why.append({0: "tour", 1: "challenger"}[lv])
+    rr = webapp._round_rank(m.get("round"))
+    if rr in (0, 1, 2):
+        score += {0: 3, 1: 2, 2: 1}[rr]
+        why.append({0: "final", 1: "semifinal", 2: "quarterfinal"}[rr])
+    ev = upset_event(m)
+    if ev:
+        score += 3
+        why.append("upset")
+    ranks = [(m["players"][k].get("ranking")) for k in ("p1", "p2")]
+    best = min([r for r in ranks if isinstance(r, int)] or [9999])
+    if best <= 100:
+        score += 2
+        why.append("top100")
+        if best <= 50:
+            score += 1
+    g = (m.get("score") or {}).get("games") or [[], []]
+    if g[0] and len(g[0]) == len(g[1]):
+        mine, other = (g[0], g[1]) if w == 1 else (g[1], g[0])
+        if len(mine) >= 3 and mine[0] < other[0] and sum(a > b for a, b in zip(mine, other)) > sum(a < b for a, b in zip(mine, other)):
+            score += 1
+            why.append("comeback")
+    return score, why
+
+
+def _who(p):
+    fp, credit = find_photo(p)
+    return {"name": p.get("name", ""), "rank": p.get("ranking"), "photo": fp, "credit": credit}
+
+
+def maybe_post(m, out_dir):
+    """Se o jogo for suficientemente interessante (e não houver já posts a mais hoje), gera o cartão com foto."""
+    from photo_cards import render_match_photo
     from captions import save_caption
+    import webapp
+    score, why = interest(m)
+    if score < POST_MIN_SCORE:
+        print(f"Jogo {m.get('id')}: interesse {score:g} (< {POST_MIN_SCORE:g}), fica só no site.")
+        return None
+    today = time.strftime("%Y-%m-%d", time.gmtime())
+    posts = _load_json(POSTS_FILE, {})
+    if len(posts.get(today, [])) >= MAX_POSTS_PER_DAY:
+        print(f"Jogo {m.get('id')}: interesse {score:g}, mas já há {MAX_POSTS_PER_DAY} posts hoje.")
+        return None
+    w = winner_index(m)
+    pw, pl = m["players"]["p%d" % w], m["players"]["p%d" % (3 - w)]
+    g = (m.get("score") or {}).get("games") or [[], []]
+    sets = list(zip(g[w - 1], g[2 - w]))
+    ev = upset_event(m)
+    _, _, _, tag = webapp.classify({"tournament": m.get("tournament", ""), "p1": {"name": pw.get("name", "")}, "p2": {"name": pl.get("name", "")}})
+    d = {"winner": _who(pw), "loser": _who(pl), "sets": sets,
+         "tournament": m.get("tournament", ""), "round": round_pt(m.get("round")),
+         "level": tag.upper(), "tag": "UPSET" if ev else "", "headline": ev["headline"] if ev else ""}
+    pdir = os.path.join(out_dir, "post")
+    os.makedirs(pdir, exist_ok=True)
+    png = render_match_photo(d, os.path.join(pdir, f"final-{m.get('id')}.png"))
+    save_caption(png, "final", dict(slim(m), reasons=why))
+    posts.setdefault(today, []).append({"id": m.get("id"), "score": score, "reasons": why, "file": os.path.basename(png)})
+    keep = sorted(posts)[-14:]
+    posts = {k: posts[k] for k in keep}
+    with open(POSTS_FILE, "w", encoding="utf-8") as f:
+        json.dump(posts, f, ensure_ascii=False, indent=2)
+    print(f"Post: {png} (interesse {score:g}: {', '.join(why)})")
+    return png
+
+
+def rising_cards(m, out_dir):
+    """Notícia 'entra no top 100' (foto + número do ranking). Vai para out/post/."""
+    from photo_cards import render_rank_news
+    from captions import save_caption
+    import webapp
+    events = update_ranks(m)
+    if not events:
+        return []
+    pdir = os.path.join(out_dir, "post")
+    os.makedirs(pdir, exist_ok=True)
     paths = []
-    for i, e in enumerate(update_ranks(m)):
-        pth = render_rising(e, os.path.join(out_dir, f"news-rising-{m.get('id')}-{i}.png"))
-        save_caption(pth, "rising", e)
-        paths.append(pth)
+    for i, e in enumerate(events):
+        pl = next((((m.get("players") or {}).get(k) or {}) for k in ("p1", "p2")
+                   if ((m.get("players") or {}).get(k) or {}).get("name") == e["player"]), {"name": e["player"]})
+        fp, credit = find_photo(pl)
+        women = webapp.classify({"tournament": m.get("tournament", ""), "p1": {"name": ""}, "p2": {"name": ""}})[0] == "women"
+        d = {"player": e["player"], "rank_now": e["rank_now"], "rank_before": e["rank_before"],
+             "system": "WTA" if women else "ATP", "headline": e["headline"].rstrip("."),
+             "context": e["context"], "photo": fp, "credit": credit}
+        png = render_rank_news(d, os.path.join(pdir, f"news-rising-{m.get('id')}-{i}.png"))
+        save_caption(png, "rising", e)
+        paths.append(png)
     return paths
 
 
 def upset_cards(m, out_dir):
-    from news_card import render_upset
-    e = upset_event(m)
-    if not e:
-        return []
-    os.makedirs(out_dir, exist_ok=True)
-    from captions import save_caption
-    pth = render_upset(e, os.path.join(out_dir, f"news-upset-{m.get('id')}.png"))
-    save_caption(pth, "upset", e)
-    return [pth]
+    return []          # as surpresas agora são um jogo importante (ver maybe_post), com a etiqueta UPSET
 
 
 def run_results(out_dir, max_checks):
@@ -765,7 +856,8 @@ def run_results(out_dir, max_checks):
     state = {k: t for k, t in load_state().items() if now - t < TRACK_MAX_AGE_H * 3600}
     if not state:
         save_state(state)
-        sys.exit("Sem jogos em acompanhamento. Corre primeiro com --live.")
+        print("Sem jogos em acompanhamento. Corre primeiro com --live.")
+        return
     os.makedirs(out_dir, exist_ok=True)
     checks = 0
     try:
@@ -795,13 +887,8 @@ def run_results(out_dir, max_checks):
                 state[mid] = state.pop(mid)
                 continue
             if m.get("status") == "completed":
-                from captions import save_caption
-                png = render_card(m, os.path.join(out_dir, f"final-{mid}.png"))
-                print("Gerado:", png)
-                save_caption(png, "final", slim(m))
-                add_result(m)
-                for pth in rising_cards(m, out_dir) + upset_cards(m, out_dir):
-                    print("Notícia:", pth)
+                add_result(m)                 # vai sempre para o site
+                maybe_post(m, out_dir)        # só os mais interessantes geram cartão para o Instagram
                 del state[mid]
             else:
                 print(f"Jogo {mid}: ainda não terminou (estado: {m.get('status')}).")
@@ -814,6 +901,14 @@ def is_doubles_match(m):
     """Pares (a quota gratuita é pequena: só acompanhamos singulares)."""
     names = [((m.get("players") or {}).get(k) or {}).get("name", "") for k in ("p1", "p2")]
     return "DOUBLES" in (m.get("tournament") or "").upper() or any(" / " in n for n in names)
+
+
+def _priority(m):
+    """Menor = mais importante: Tour, Challenger, ITF; depois o resto."""
+    import webapp
+    names = [((m.get("players") or {}).get(k) or {}).get("name", "") for k in ("p1", "p2")]
+    _, _, level, _ = webapp.classify({"tournament": m.get("tournament", ""), "p1": {"name": names[0]}, "p2": {"name": names[1]}})
+    return webapp.LEVEL_ORDER.get(level, 3)
 
 
 def has_portuguese(m):
@@ -847,7 +942,8 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--live", action="store_true", help="usar jogos ao vivo da API")
     ap.add_argument("--pt", action="store_true", help="só jogos com jogadores portugueses")
-    ap.add_argument("--max", type=int, default=5, help="máximo de cartões")
+    ap.add_argument("--max", type=int, default=5, help="máximo de cartões (ou de jogos novos a acompanhar com --track-only)")
+    ap.add_argument("--track-only", action="store_true", help="com --live: só acompanha jogos (não gera cartões de jogos a decorrer)")
     ap.add_argument("--out", default="cards", help="pasta de saída")
     ap.add_argument("--results", action="store_true", help="gerar cartões finais dos jogos acompanhados")
     ap.add_argument("--max-checks", type=int, default=10, help="máx. de consultas em --results")
@@ -859,8 +955,8 @@ if __name__ == "__main__":
     LANG = a.lang
 
     if a.page:
-        for pth in build_site("site", a.player):
-            print("Gerado:", pth)
+        paths = build_site("site", a.player)
+        print(f"Gerado: {len(paths)} páginas em site/")
         sys.exit(0)
 
     if a.results:
@@ -869,19 +965,29 @@ if __name__ == "__main__":
 
     matches = fetch_live() if a.live else SAMPLES
     if a.live:
-        matches = [m for m in matches if not is_doubles_match(m)]
+        matches = sorted([m for m in matches if not is_doubles_match(m)], key=_priority)
     all_matches = matches
     if a.pt:
         matches = [m for m in matches if has_portuguese(m)]
     if not matches:
+        if a.live:
+            print("Sem jogos de singulares ao vivo neste momento.")
+            sys.exit(0)
         sys.exit("Nenhum jogo encontrado com estes filtros.")
 
     os.makedirs(a.out, exist_ok=True)
     shown = matches[: a.max]
-    for m in shown:
+    for m in ([] if a.track_only else shown):
         print("Gerado:", render_card(m, os.path.join(a.out, f"{m['id']}.png")))
     if a.live:
         for m in all_matches:
             for pth in rising_cards(m, a.out):
                 print("Notícia:", pth)
-        track([m["id"] for m in shown if is_live(m)])
+        if a.track_only:
+            state = load_state()
+            room = max(0, MAX_TRACKED - len(state))      # fila curta: a quota só dá para verificar poucos jogos
+            fresh = [m for m in matches if is_live(m) and str(m["id"]) not in state][: min(a.max, room)]
+            track([m["id"] for m in fresh])
+            print(f"Acompanhados: {len(state)} + {len(fresh)} novos (máx. {MAX_TRACKED}).")
+        else:
+            track([m["id"] for m in shown if is_live(m)])

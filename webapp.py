@@ -182,6 +182,17 @@ h2.sec a{font:500 .9rem system-ui;color:var(--v)}
 .th a{text-decoration:none}.th a:hover{text-decoration:underline}
 .champ{color:var(--v)!important;margin-top:6px!important}.champ b{color:var(--c)}
 .page-h a{color:var(--v);text-decoration:none;font-size:.9rem}
+.bk{display:grid;grid-template-columns:repeat(3,minmax(210px,1fr));gap:0 30px;overflow-x:auto;padding:4px 2px 12px}
+.bc{display:grid;position:relative}
+.bc.q{grid-template-rows:auto repeat(4,1fr)}.bc.s{grid-template-rows:auto repeat(2,2fr)}.bc.f{grid-template-rows:auto 4fr}
+.bc h4{margin:0 0 8px;font:700 .72rem system-ui;letter-spacing:.12em;text-transform:uppercase;color:var(--v)}
+.bcell{display:flex;align-items:center;padding:5px 0;position:relative}
+.bc.q .bcell::after,.bc.s .bcell::after{content:"";position:absolute;right:-30px;width:30px;top:50%;border-top:1px solid var(--e)}
+.bm{background:var(--deep);border:1px solid var(--e);border-radius:12px;padding:4px 10px;width:100%}
+.bm .pl{padding:3px 0;gap:8px}.bm .pl+.pl{border-top:1px solid var(--e)}
+.bm .nm{font:700 .86rem system-ui;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.bm .ch b{min-width:24px;height:24px;border-radius:7px;font-size:.8rem}
+.bm.tbd{color:var(--s);font:500 .8rem system-ui;text-align:center;padding:14px 10px;border-style:dashed}
 .more{display:block;margin:20px auto;background:none;color:var(--c);border:2px solid var(--c);border-radius:999px;padding:10px 22px;font:700 .9rem system-ui;cursor:pointer}
 .empty{color:var(--s);padding:24px 0}
 footer{color:var(--s);font-size:.8rem;padding:28px 0 44px;border-top:1px solid var(--e);margin-top:28px}
@@ -271,6 +282,60 @@ def match_html(r, tr, esc=html.escape):
     return f'<div class="mt"><div class="mh">{esc(meta)}</div>{lines[0]}{lines[1]}{bd}</div>'
 
 
+def _bm(r, tx, esc=html.escape):
+    """Cartão compacto de um jogo no quadro."""
+    if r is None:
+        return f'<div class="bm tbd">{esc(tx["f_tbd"])}</div>'
+    rows = ""
+    for i in (0, 1):
+        p = r["p%d" % (i + 1)]
+        chips = "".join(f'<b class="{"on" if (a if i == 0 else b) > (b if i == 0 else a) else ""}">{a if i == 0 else b}</b>'
+                        for a, b in zip(r["games"][0], r["games"][1]))
+        rows += (f'<div class="pl {"win" if r.get("winner") == i + 1 else ""}"><span class="nm">{esc(p["name"])}</span>'
+                 f'<div class="ch">{chips}</div></div>')
+    return f'<div class="bm">{rows}</div>'
+
+
+def bracket_html(singles, tr, tx):
+    """Quadro dos quartos de final até à final, só com os jogos que temos (o resto fica 'por apurar')."""
+    by = {0: [], 1: [], 2: []}
+    for r in singles:
+        k = _round_rank(r.get("round"))
+        if k in by:
+            by[k].append(r)
+    if not any(by.values()):
+        return ""
+    fin = by[0][:1]
+    sfs = by[1][:2]
+    qfs = by[2][:4]
+    # ordena os quartos para ficarem ao lado da meia-final em que o vencedor jogou
+    def sf_index(q):
+        w = q["p%d" % q["winner"]]["name"] if q.get("winner") in (1, 2) else None
+        for i, sf in enumerate(sfs):
+            if w and w in (sf["p1"]["name"], sf["p2"]["name"]):
+                return i
+        return 9
+    qfs = sorted(qfs, key=sf_index)
+    slots_q = [None] * 4
+    used = set()
+    for q in qfs:                                  # coloca cada quarto nos 2 lugares da sua meia-final
+        base = sf_index(q)
+        spots = [base * 2, base * 2 + 1] if base < 2 else [0, 1, 2, 3]
+        for sp in spots:
+            if sp < 4 and sp not in used:
+                slots_q[sp] = q; used.add(sp); break
+    # meias-finais ordenadas pelo índice
+    sfo = sfs + [None] * (2 - len(sfs))
+    lab = lambda k, d: tr["rounds"].get(k, d)
+    col = lambda title, cls, cells: (f'<div class="bc {cls}"><h4>{html.escape(title)}</h4>'
+                                       + "".join(f'<div class="bcell">{_bm(c, tx)}</div>' for c in cells) + '</div>')
+    return (f'<h2 class="dh">{html.escape(tx["f_bracket"])}</h2><div class="bk">'
+            + col(lab("1/4-finals", "Quarterfinals"), "q", slots_q)
+            + col(lab("semi-finals", "Semifinals"), "s", sfo)
+            + col(lab("final", "Final"), "f", fin + [None] * (1 - len(fin)))
+            + '</div>')
+
+
 def tournament_page(name, rs, tr, tx):
     """Corpo da página de um torneio (singulares primeiro, pares depois)."""
     esc = html.escape
@@ -293,7 +358,7 @@ def tournament_page(name, rs, tr, tx):
             return ""
         body = "".join(match_html(r, tr) for r in items)
         return f'<h2 class="dh">{esc(title)}</h2><section class="tg">{body}</section>'
-    h += sec(tx["f_singles"], singles) + sec(tx["f_doubles"], doubles)
+    h += bracket_html(singles, tr, tx) + sec(tx["f_singles"], singles) + sec(tx["f_doubles"], doubles)
     return h
 
 
