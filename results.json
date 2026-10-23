@@ -216,5 +216,189 @@
       ]
     ],
     "winner": 2
+  },
+  {
+    "id": 208204,
+    "date": "2026-10-23",
+    "tournament": "Florence (Italy) - Qualification",
+    "round": "Quarter-finals",
+    "surface": "clay",
+    "p1": {
+      "name": "Filippo Romano",
+      "country": "ita"
+    },
+    "p2": {
+      "name": "Matthew Donald",
+      "country": "cze"
+    },
+    "games": [
+      [
+        6,
+        6
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "winner": 1
+  },
+  {
+    "id": 208106,
+    "date": "2026-10-23",
+    "tournament": "Ningbo",
+    "round": "Quarter-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Iva Jovic",
+      "country": "usa"
+    },
+    "p2": {
+      "name": "Diana Shnaider",
+      "country": "rus"
+    },
+    "games": [
+      [
+        3,
+        6,
+        1
+      ],
+      [
+        6,
+        4,
+        6
+      ]
+    ],
+    "winner": 2
+  },
+  {
+    "id": 208141,
+    "date": "2026-10-23",
+    "tournament": "W100 Wrexham",
+    "round": "Quarter-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Elsa Jacquemot",
+      "country": "fra"
+    },
+    "p2": {
+      "name": "Alicia Dudeney",
+      "country": "gbr"
+    },
+    "games": [
+      [
+        7,
+        6
+      ],
+      [
+        6,
+        2
+      ]
+    ],
+    "winner": 1
+  },
+  {
+    "id": 208235,
+    "date": "2026-10-23",
+    "tournament": "M15 Monastir 36",
+    "round": "Quarter-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Kasra Rahmani",
+      "country": "iri"
+    },
+    "p2": {
+      "name": "Nazim Makhlouf",
+      "country": "alg"
+    },
+    "games": [
+      [
+        6,
+        6
+      ],
+      [
+        1,
+        3
+      ]
+    ],
+    "winner": 1
+  },
+  {
+    "id": 207910,
+    "date": "2026-10-23",
+    "tournament": "W15 Bol 2",
+    "round": "1/8-finals",
+    "surface": "clay",
+    "p1": {
+      "name": "Andrea Obradovic",
+      "country": "srb"
+    },
+    "p2": {
+      "name": "Eliska Tichackova",
+      "country": "cze"
+    },
+    "games": [
+      [
+        6,
+        7
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "winner": 1
+  },
+  {
+    "id": 208234,
+    "date": "2026-10-23",
+    "tournament": "M15 Monastir 36",
+    "round": "Quarter-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Ferdinand Livet Novkirichka",
+      "country": "fra"
+    },
+    "p2": {
+      "name": "Fnu Nidunjianzan",
+      "country": "chn"
+    },
+    "games": [
+      [
+        7,
+        6
+      ],
+      [
+        5,
+        1
+      ]
+    ],
+    "winner": 1
+  },
+  {
+    "id": 208186,
+    "date": "2026-10-23",
+    "tournament": "W15 Sharm ElSheikh 16",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Alhussein / Samir",
+      "country": null
+    },
+    "p2": {
+      "name": "Efremova / Meshcheryakova",
+      "country": null
+    },
+    "games": [
+      [
+        7,
+        6
+      ],
+      [
+        5,
+        3
+      ]
+    ],
+    "winner": 1
   }
 ]
