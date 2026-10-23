@@ -675,6 +675,8 @@ def build_site(out_dir="site", player=None):
 
 # ---------- notícias a partir de dados reais (nada é inventado) ----------
 RANKS_FILE = "ranks.json"
+PHOTO_BONUS = float(os.environ.get("PHOTO_BONUS", "2"))          # bónus se o vencedor tem foto licenciada
+NO_PHOTO_EXTRA = float(os.environ.get("NO_PHOTO_EXTRA", "1"))   # sem foto, o limiar sobe
 UPSET_GAP = int(os.environ.get("UPSET_GAP", "80"))   # diferença mínima de ranking para ser "surpresa"
 RISING_MAX_JUMP = 150                                 # saltos maiores são tratados como erro nos dados
 RANK_MAX_AGE_D = 60                                   # só compara com rankings vistos nos últimos 60 dias
@@ -791,8 +793,13 @@ def maybe_post(m, out_dir):
     from captions import save_caption
     import webapp
     score, why = interest(m)
-    if score < POST_MIN_SCORE:
-        print(f"Jogo {m.get('id')}: interesse {score:g} (< {POST_MIN_SCORE:g}), fica só no site.")
+    # prioridade a jogos COM imagem: com foto licenciada ganha bónus; sem foto precisa de mais interesse
+    _w = winner_index(m)
+    has_photo = bool(_w and find_photo(m["players"]["p%d" % _w])[0])
+    score += PHOTO_BONUS if has_photo else 0
+    need = POST_MIN_SCORE + (0 if has_photo else NO_PHOTO_EXTRA)
+    if score < need:
+        print(f"Jogo {m.get('id')}: interesse {score:g} (< {need:g}{'' if has_photo else ', sem foto'}), fica só no site.")
         return None
     today = time.strftime("%Y-%m-%d", time.gmtime())
     posts = _load_json(POSTS_FILE, {})
