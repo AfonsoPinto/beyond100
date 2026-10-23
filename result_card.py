@@ -507,7 +507,9 @@ PAGE_TEXT = {
            "note": "Scores are provided for information only and may contain delays or errors.",
            "f_all": "All", "f_men": "Men", "f_women": "Women", "f_singles": "Singles", "f_doubles": "Doubles",
            "f_alltour": "All tournaments", "f_matches": "matches", "f_more": "Show more",
-           "f_tournament": "Tournament", "f_player": "Search player"},
+           "f_tournament": "Tournament", "f_player": "Search player", "f_highlights": "Highlights", "f_games": "of games",
+           "b_comeback": "Comeback", "b_bagel": "Bagel (6-0)", "b_breadstick": "Breadstick (6-1)",
+           "b_super": "Super tie-break", "b_tb": "{n} tie-break", "b_closest": "Closest of the day"},
     "pt": {"title": "Últimos resultados", "lead": "Challenger, ITF e o circuito para lá do top 100.",
            "empty": "Ainda sem resultados. Volta em breve.", "nav": "Resultados", "home": "Início",
            "h1a": "Ténis para lá", "h1b": "do top 100.",
@@ -516,7 +518,9 @@ PAGE_TEXT = {
            "note": "Os resultados são apenas informativos e podem conter atrasos ou erros.",
            "f_all": "Todos", "f_men": "Masculino", "f_women": "Feminino", "f_singles": "Singulares", "f_doubles": "Pares",
            "f_alltour": "Todos os torneios", "f_matches": "jogos", "f_more": "Mostrar mais",
-           "f_tournament": "Torneio", "f_player": "Pesquisar jogador"},
+           "f_tournament": "Torneio", "f_player": "Pesquisar jogador", "f_highlights": "Destaques", "f_games": "dos jogos",
+           "b_comeback": "Virada", "b_bagel": "Set a 0", "b_breadstick": "Set 6-1",
+           "b_super": "Super tie-break", "b_tb": "{n} tie-break", "b_closest": "Mais disputado do dia"},
 }
 
 EMBLEM_SVG = """<svg viewBox="0 0 600 600" role="img" aria-label="Beyond100" class="emb">
@@ -742,6 +746,7 @@ def upset_cards(m, out_dir):
 
 
 def run_results(out_dir, max_checks):
+    import requests
     now = time.time()
     state = {k: t for k, t in load_state().items() if now - t < TRACK_MAX_AGE_H * 3600}
     if not state:
@@ -749,27 +754,46 @@ def run_results(out_dir, max_checks):
         sys.exit("Sem jogos em acompanhamento. Corre primeiro com --live.")
     os.makedirs(out_dir, exist_ok=True)
     checks = 0
-    for mid in list(state):
-        if now - state[mid] < MIN_AGE_BEFORE_CHECK_S:
-            continue                      # jogo acompanhado há pouco: é improvável que já tenha acabado
-        if checks >= max_checks:
-            print(f"Limite de {max_checks} consultas atingido (poupa a quota diária).")
-            break
-        checks += 1
-        m = fetch_match(mid)
-        if m.get("status") == "completed":
-            from captions import save_caption
-            png = render_card(m, os.path.join(out_dir, f"final-{mid}.png"))
-            print("Gerado:", png)
-            save_caption(png, "final", slim(m))
-            add_result(m)
-            for pth in rising_cards(m, out_dir) + upset_cards(m, out_dir):
-                print("Notícia:", pth)
-            del state[mid]
-        else:
-            print(f"Jogo {mid}: ainda não terminou (estado: {m.get('status')}).")
-            state[mid] = state.pop(mid)   # vai para o fim da fila: os outros jogos também são verificados
-    save_state(state)
+    try:
+        for mid in list(state):
+            if now - state[mid] < MIN_AGE_BEFORE_CHECK_S:
+                continue                      # jogo acompanhado há pouco: é improvável que já tenha acabado
+            if checks >= max_checks:
+                print(f"Limite de {max_checks} consultas atingido (poupa a quota diária).")
+                break
+            checks += 1
+            try:
+                m = fetch_match(mid)
+            except requests.exceptions.HTTPError as e:
+                code = e.response.status_code if e.response is not None else None
+                if code in (404, 410):        # jogo removido/cancelado na API: deixa de ser acompanhado
+                    print(f"Jogo {mid}: já não existe na API ({code}), removido do acompanhamento.")
+                    del state[mid]
+                    continue
+                if code == 429:               # quota esgotada: pára e guarda o que já se sabe
+                    print("Quota da API esgotada (429): a parar por agora.")
+                    break
+                print(f"Jogo {mid}: erro {code} da API, fica para a próxima.")
+                state[mid] = state.pop(mid)
+                continue
+            except requests.exceptions.RequestException as e:
+                print(f"Jogo {mid}: erro de rede ({type(e).__name__}), fica para a próxima.")
+                state[mid] = state.pop(mid)
+                continue
+            if m.get("status") == "completed":
+                from captions import save_caption
+                png = render_card(m, os.path.join(out_dir, f"final-{mid}.png"))
+                print("Gerado:", png)
+                save_caption(png, "final", slim(m))
+                add_result(m)
+                for pth in rising_cards(m, out_dir) + upset_cards(m, out_dir):
+                    print("Notícia:", pth)
+                del state[mid]
+            else:
+                print(f"Jogo {mid}: ainda não terminou (estado: {m.get('status')}).")
+                state[mid] = state.pop(mid)   # vai para o fim da fila: os outros jogos também são verificados
+    finally:
+        save_state(state)                     # mesmo com erro inesperado, o progresso não se perde
 
 
 def is_doubles_match(m):
