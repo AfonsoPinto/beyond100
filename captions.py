@@ -34,8 +34,12 @@ def fallback(kind, facts):
         if w in (1, 2):
             win, los = facts["p%d" % w], facts["p%d" % (3 - w)]
             score = "  ".join(f"{a}-{b}" for a, b in zip(facts["games"][w - 1], facts["games"][2 - w]))
-            return (f"{_name(win)} beats {_name(los)} {score}.\n{facts.get('tournament', '')}\n"
-                    f"Who impressed you most today?\n{tag}").strip()
+            why = facts.get("reasons") or []
+            extra = ("Upset alert. " if "upset" in why else "") + ("A comeback win. " if "comeback" in why else "")
+            stage = {"final": "in the final", "semifinal": "in the semifinals", "quarterfinal": "in the quarterfinals"}
+            where = next((stage[r] for r in why if r in stage), "")
+            return (f"{extra}{_name(win)} beats {_name(los)} {score} {where}.\n{facts.get('tournament', '')}\n"
+                    f"Who impressed you most today?\n{tag}").replace("  ", " ").replace(" .", ".").strip()
     if kind == "upset":
         return (f"{facts.get('headline', 'Upset alert.')}\n{facts.get('context', '')}\n"
                 f"Did you see this coming?\n{tag} #upset").strip()
