@@ -696,5 +696,59 @@
       ]
     ],
     "winner": 1
+  },
+  {
+    "id": 208275,
+    "date": "2026-10-23",
+    "tournament": "M15 Maceio (Brazil)",
+    "round": "Quarter-finals",
+    "surface": "clay",
+    "p1": {
+      "name": "Lorenzo Santos Gava Kaua",
+      "country": "bra"
+    },
+    "p2": {
+      "name": "Leonardo Storck Franca",
+      "country": "bra"
+    },
+    "games": [
+      [
+        6,
+        7
+      ],
+      [
+        3,
+        6
+      ]
+    ],
+    "winner": 1
+  },
+  {
+    "id": 208278,
+    "date": "2026-10-23",
+    "tournament": "W15 Campina Grande (Brazil)",
+    "round": "Quarter-finals",
+    "surface": "clay",
+    "p1": {
+      "name": "Fernanda Labrana",
+      "country": "chi"
+    },
+    "p2": {
+      "name": "Barbara Gatica",
+      "country": "chi"
+    },
+    "games": [
+      [
+        2,
+        6,
+        2
+      ],
+      [
+        6,
+        1,
+        6
+      ]
+    ],
+    "winner": 2
   }
 ]
