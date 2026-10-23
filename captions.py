@@ -43,6 +43,11 @@ def fallback(kind, facts):
     if kind == "upset":
         return (f"{facts.get('headline', 'Upset alert.')}\n{facts.get('context', '')}\n"
                 f"Did you see this coming?\n{tag} #upset").strip()
+    if kind == "weekly":
+        fin = facts.get("finals") or []
+        lines = [f"{f['winner']} won {f['tournament']}." for f in fin[:2]]
+        return ("The week beyond the top 100.\n" + " ".join(lines) + f"\n{facts.get('matches', 0)} matches tracked. "
+                f"Which result surprised you most?\n{tag} #weeklyrecap").strip()
     if kind == "rising":
         return f"A new name inside the top 100.\nWho's next?\n{tag} #rising"
     return f"{tag}"
@@ -52,7 +57,25 @@ def _numbers(text):
     return set(re.findall(r"\d+", text))
 
 
+LINK_LINE = "Full results: link in bio"
+
+
+def _finish(text):
+    """Acrescenta 'Full results: link in bio' antes das hashtags (uma só vez)."""
+    text = (text or "").strip()
+    if "link in bio" in text.lower():
+        return text
+    lines = text.split("\n")
+    if lines and lines[-1].lstrip().startswith("#"):
+        return "\n".join(lines[:-1]).rstrip() + "\n" + LINK_LINE + "\n\n" + lines[-1]
+    return text + "\n" + LINK_LINE
+
+
 def make_caption(kind, facts):
+    return _finish(_make_caption(kind, facts))
+
+
+def _make_caption(kind, facts):
     key = os.environ.get("ANTHROPIC_API_KEY")
     if not key:
         return fallback(kind, facts)
