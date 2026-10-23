@@ -963,7 +963,11 @@ if __name__ == "__main__":
         run_results(a.out, a.max_checks)
         sys.exit(0)
 
-    matches = fetch_live() if a.live else SAMPLES
+    try:
+        matches = fetch_live() if a.live else SAMPLES
+    except Exception as e:
+        print(f"Não consegui obter jogos ao vivo ({e}); salto este passo.")
+        sys.exit(0)
     if a.live:
         matches = sorted([m for m in matches if not is_doubles_match(m)], key=_priority)
     all_matches = matches
