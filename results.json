@@ -106,5 +106,33 @@
       ]
     ],
     "winner": 2
+  },
+  {
+    "id": 208237,
+    "date": "2026-10-23",
+    "tournament": "W15 Karlovy Vary (Czech Republic)",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Katerina Zajickova",
+      "country": "cze"
+    },
+    "p2": {
+      "name": "Pavla Sviglerova",
+      "country": "CZE"
+    },
+    "games": [
+      [
+        4,
+        6,
+        6
+      ],
+      [
+        6,
+        1,
+        0
+      ]
+    ],
+    "winner": 1
   }
 ]
