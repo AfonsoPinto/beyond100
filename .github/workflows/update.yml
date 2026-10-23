@@ -1,7 +1,7 @@
 name: Update Beyond100
 on:
   schedule:
-    - cron: "*/30 * * * *"   # every hour (free API tier: 100 requests/day)
+    - cron: "7 * * * *"   # every hour at minute 7 (free API tier: 100 requests/day)
   workflow_dispatch: {}
 permissions:
   contents: write
@@ -22,8 +22,9 @@ jobs:
           LIVETENNIS_KEY: ${{ secrets.LIVETENNIS_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          python result_card.py --live --max 5 --out out
-          python result_card.py --results --max-checks 20 --out out
+          python result_card.py --live --track-only --max 3 --out out
+          python result_card.py --results --max-checks 2 --out out
+          python publisher.py prepare out
           python result_card.py --page
       - name: Keep new cards and captions (7 days)
         uses: actions/upload-artifact@v4
@@ -37,9 +38,11 @@ jobs:
         run: |
           git config user.name "beyond100-bot"
           git config user.email "bot@users.noreply.github.com"
-          for f in tracked.json results.json ranks.json; do
+          git pull --rebase --autostash || true
+          for f in tracked.json results.json ranks.json posts.json; do
             if [ -f "$f" ]; then git add -f "$f"; fi
           done
+          if [ -d posts ]; then git add -A -f posts; fi
           if ! git diff --cached --quiet; then git commit -m "Update state"; git push; fi
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
@@ -47,3 +50,15 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy site --project-name=beyond100
+      - name: Send new posts to Instagram (only if PUBLISH_AUTO=1)
+        env:
+          PUBLISH_AUTO: ${{ vars.PUBLISH_AUTO }}
+          PUBLISH_BACKEND: ${{ vars.PUBLISH_BACKEND }}
+          MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+        run: python publisher.py send
+      - name: Save sent flags
+        run: |
+          git add -f posts.json || true
+          if ! git diff --cached --quiet; then git commit -m "Update posts"; git pull --rebase --autostash || true; git push; fi
