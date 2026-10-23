@@ -400,5 +400,89 @@
       ]
     ],
     "winner": 1
+  },
+  {
+    "id": 208129,
+    "date": "2026-10-23",
+    "tournament": "W35 Loule",
+    "round": "Quarter-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Aran Teixido Garcia",
+      "country": "esp"
+    },
+    "p2": {
+      "name": "Sophie Luescher",
+      "country": "sui"
+    },
+    "games": [
+      [
+        6,
+        5,
+        6
+      ],
+      [
+        4,
+        7,
+        3
+      ]
+    ],
+    "winner": 1
+  },
+  {
+    "id": 208174,
+    "date": "2026-10-23",
+    "tournament": "M25 Redbridge (United Kingdom)",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Paul Jubb",
+      "country": "gbr"
+    },
+    "p2": {
+      "name": "Patrick Brady",
+      "country": "gbr"
+    },
+    "games": [
+      [
+        3,
+        6,
+        7
+      ],
+      [
+        6,
+        1,
+        6
+      ]
+    ],
+    "winner": 1
+  },
+  {
+    "id": 208175,
+    "date": "2026-10-23",
+    "tournament": "M25 Santa Margherita di Pula 11",
+    "round": "Semi-finals",
+    "surface": "clay",
+    "p1": {
+      "name": "Adrian Oetzbach",
+      "country": "ger"
+    },
+    "p2": {
+      "name": "Luis Carlos Alvarez Valdes",
+      "country": "mex"
+    },
+    "games": [
+      [
+        6,
+        5,
+        6
+      ],
+      [
+        4,
+        7,
+        1
+      ]
+    ],
+    "winner": 1
   }
 ]
