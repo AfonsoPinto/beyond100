@@ -270,7 +270,7 @@
     "country": "ind",
     "rank": 130,
     "date": "2026-10-23",
-    "ts": 1792796736.6883855
+    "ts": 1792796886.1105855
   },
   "11190": {
     "name": "Valentina Khrebtova",
@@ -1257,14 +1257,14 @@
     "country": "fra",
     "rank": 48,
     "date": "2026-10-23",
-    "ts": 1792796736.6960604
+    "ts": 1792796886.119559
   },
   "664": {
     "name": "Lorenzo Musetti",
     "country": "ita",
     "rank": 26,
     "date": "2026-10-23",
-    "ts": 1792796736.6960604
+    "ts": 1792796886.119559
   },
   "364": {
     "name": "Gray Voelzke",
@@ -1278,7 +1278,7 @@
     "country": "arg",
     "rank": 1909,
     "date": "2026-10-23",
-    "ts": 1792796736.697183
+    "ts": 1792796886.1210725
   },
   "107": {
     "name": "Santiago Rodriguez Taverna",
@@ -1306,48 +1306,104 @@
     "country": "chn",
     "rank": 420,
     "date": "2026-10-23",
-    "ts": 1792796736.6872232
+    "ts": 1792796886.1090853
   },
   "789": {
     "name": "Yaroslava Bartashevich",
     "country": "fra",
     "rank": 568,
     "date": "2026-10-23",
-    "ts": 1792796736.6872232
+    "ts": 1792796886.1090853
   },
   "37552": {
     "name": "Connie Ma",
     "country": "usa",
     "rank": 1045,
     "date": "2026-10-23",
-    "ts": 1792796736.6883855
+    "ts": 1792796886.1105855
   },
   "192": {
     "name": "Jenson Brooksby",
     "country": "usa",
     "rank": 99,
     "date": "2026-10-23",
-    "ts": 1792796736.6993918
+    "ts": 1792796886.12407
   },
   "11564": {
     "name": "Patrick Maloney",
     "country": "usa",
     "rank": 910,
     "date": "2026-10-23",
-    "ts": 1792796736.6993918
+    "ts": 1792796886.12407
   },
   "240": {
     "name": "Sarah Saito",
     "country": "jpn",
     "rank": 655,
     "date": "2026-10-23",
-    "ts": 1792796736.6895354
+    "ts": 1792796886.1120863
   },
   "3035": {
     "name": "Ariana Arseneault",
     "country": "can",
     "rank": 352,
     "date": "2026-10-23",
-    "ts": 1792796736.6895354
+    "ts": 1792796886.1120863
+  },
+  "473": {
+    "name": "Blake Ellis",
+    "country": "aus",
+    "rank": 445,
+    "date": "2026-10-23",
+    "ts": 1792796886.1135647
+  },
+  "1987": {
+    "name": "Herman Hoeyeraal",
+    "country": "nor",
+    "rank": 670,
+    "date": "2026-10-23",
+    "ts": 1792796886.1135647
+  },
+  "1011": {
+    "name": "Matthew Dellavedova",
+    "country": "aus",
+    "rank": 250,
+    "date": "2026-10-23",
+    "ts": 1792796886.115043
+  },
+  "1869": {
+    "name": "Stefan Vujic",
+    "country": "aus",
+    "rank": 874,
+    "date": "2026-10-23",
+    "ts": 1792796886.115043
+  },
+  "2624": {
+    "name": "Mio Mushika",
+    "country": "jpn",
+    "rank": 428,
+    "date": "2026-10-23",
+    "ts": 1792796886.1165514
+  },
+  "2955": {
+    "name": "Hikaru Sato",
+    "country": "jpn",
+    "rank": 438,
+    "date": "2026-10-23",
+    "ts": 1792796886.1165514
+  },
+  "2727": {
+    "name": "Vaidehi Chaudhari",
+    "country": "ind",
+    "rank": 423,
+    "date": "2026-10-23",
+    "ts": 1792796886.1180532
+  },
+  "2944": {
+    "name": "I Wen Wan",
+    "country": "tai",
+    "rank": 828,
+    "date": "2026-10-23",
+    "ts": 1792796886.1180532
   }
 }
