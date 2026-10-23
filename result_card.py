@@ -508,6 +508,7 @@ PAGE_TEXT = {
            "f_all": "All", "f_men": "Men", "f_women": "Women", "f_singles": "Singles", "f_doubles": "Doubles",
            "f_alltour": "All tournaments", "f_matches": "matches", "f_more": "Show more",
            "f_tournament": "Tournament", "f_player": "Search player", "f_highlights": "Highlights", "f_games": "of games",
+           "f_champion": "Champion", "f_search_tour": "Search tournament", "f_tournaments": "All tournaments",
            "b_comeback": "Comeback", "b_bagel": "Bagel (6-0)", "b_breadstick": "Breadstick (6-1)",
            "b_super": "Super tie-break", "b_tb": "{n} tie-break", "b_closest": "Closest of the day"},
     "pt": {"title": "Últimos resultados", "lead": "Challenger, ITF e o circuito para lá do top 100.",
@@ -519,6 +520,7 @@ PAGE_TEXT = {
            "f_all": "Todos", "f_men": "Masculino", "f_women": "Feminino", "f_singles": "Singulares", "f_doubles": "Pares",
            "f_alltour": "Todos os torneios", "f_matches": "jogos", "f_more": "Mostrar mais",
            "f_tournament": "Torneio", "f_player": "Pesquisar jogador", "f_highlights": "Destaques", "f_games": "dos jogos",
+           "f_champion": "Campeão", "f_search_tour": "Pesquisar torneio", "f_tournaments": "Todos os torneios",
            "b_comeback": "Virada", "b_bagel": "Set a 0", "b_breadstick": "Set 6-1",
            "b_super": "Super tie-break", "b_tb": "{n} tie-break", "b_closest": "Mais disputado do dia"},
 }
@@ -597,17 +599,17 @@ def _results_html(results, tr, empty):
     return "\n".join(rows) or f'<p class="empty">{esc(empty)}</p>'
 
 
-def _shell(title, body, tx):
+def _shell(title, body, tx, root=""):
     esc = html.escape
     return (f'<!doctype html>\n<html lang="{LANG}"><head><meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
             f'<title>{esc(title)}</title>\n<meta name="theme-color" content="#0e3a2d">\n'
-            '<link rel="icon" href="favicon.svg" type="image/svg+xml">\n'
-            '<link rel="icon" href="favicon.png" sizes="192x192" type="image/png">\n'
-            '<link rel="apple-touch-icon" href="favicon.png">\n'
+            f'<link rel="icon" href="{root}favicon.svg" type="image/svg+xml">\n'
+            f'<link rel="icon" href="{root}favicon.png" sizes="192x192" type="image/png">\n'
+            f'<link rel="apple-touch-icon" href="{root}favicon.png">\n'
             f'<style>{SITE_CSS}</style></head><body><div class="wrap">\n'
-            f'<nav><a class="brand" href="index.html">BEYOND100</a><div>'
-            f'<a href="results.html">{esc(tx["nav"])}</a><a href="{IG_URL}">Instagram</a></div></nav>\n'
+            f'<nav><a class="brand" href="{root}index.html">BEYOND100</a><div>'
+            f'<a href="{root}results.html">{esc(tx["nav"])}</a><a href="{IG_URL}">Instagram</a></div></nav>\n'
             f'{body}\n<footer>{esc(tx["note"])}</footer></div></body></html>')
 
 
@@ -651,6 +653,18 @@ def build_site(out_dir="site", player=None):
         path = os.path.join(out_dir, name)
         with open(path, "w", encoding="utf-8") as f:
             f.write(_shell(title, body, tx))
+        paths.append(path)
+    # uma página por torneio (singulares primeiro, pares depois)
+    groups = {}
+    for x in results:
+        groups.setdefault(webapp.base_tournament(x.get("tournament", "")), []).append(x)
+    tdir = os.path.join(out_dir, "t")
+    os.makedirs(tdir, exist_ok=True)
+    for name, rs in groups.items():
+        body = webapp.tournament_page(name, rs, tr, tx)
+        path = os.path.join(tdir, webapp.slugify(name) + ".html")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(_shell(f"{name} · Beyond100", body, tx, root="../"))
         paths.append(path)
     return paths
 
