@@ -1,0 +1,79 @@
+"""Legendas de Instagram geradas com a Anthropic API (Haiku).
+
+Regras de segurança:
+- a IA só recebe dados públicos do cartão e é instruída a não inventar nada;
+- todo o número da legenda tem de existir nos dados; se não, usa-se a legenda-modelo;
+- sem chave ou com erro de rede, usa-se a legenda-modelo (o workflow nunca falha por causa disto).
+"""
+import json
+import os
+import re
+
+import requests
+
+API_URL = "https://api.anthropic.com/v1/messages"
+MODEL = os.environ.get("CAPTION_MODEL", "claude-haiku-5-5")
+SYSTEM = (
+    "You write Instagram captions for Beyond100, a tennis account about Challenger, ITF and WTA "
+    "tennis beyond the top 100. Tone: modern, concise, knowledgeable, never hype-y.\n"
+    "Rules: use ONLY the facts in the JSON you are given. Never invent names, scores, rankings, "
+    "records, quotes or dates. Max 3 short lines, then one question to the reader, then 3-5 "
+    "relevant hashtags (e.g. #tennis #challengertennis). At most 1 emoji. English. "
+    "Output the caption text only."
+)
+
+
+def _name(p):
+    return (p or {}).get("name", "")
+
+
+def fallback(kind, facts):
+    tag = "#tennis #challengertennis #beyond100"
+    if kind == "final":
+        w = facts.get("winner")
+        if w in (1, 2):
+            win, los = facts["p%d" % w], facts["p%d" % (3 - w)]
+            score = "  ".join(f"{a}-{b}" for a, b in zip(facts["games"][w - 1], facts["games"][2 - w]))
+            return (f"{_name(win)} beats {_name(los)} {score}.\n{facts.get('tournament', '')}\n"
+                    f"Who impressed you most today?\n{tag}").strip()
+    if kind == "upset":
+        return (f"{facts.get('headline', 'Upset alert.')}\n{facts.get('context', '')}\n"
+                f"Did you see this coming?\n{tag} #upset").strip()
+    if kind == "rising":
+        return f"A new name inside the top 100.\nWho's next?\n{tag} #rising"
+    return f"{tag}"
+
+
+def _numbers(text):
+    return set(re.findall(r"\d+", text))
+
+
+def make_caption(kind, facts):
+    key = os.environ.get("ANTHROPIC_API_KEY")
+    if not key:
+        return fallback(kind, facts)
+    payload = json.dumps({"kind": kind, "facts": facts}, ensure_ascii=False)
+    try:
+        r = requests.post(
+            API_URL,
+            headers={"x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json"},
+            json={"model": MODEL, "max_tokens": 300, "system": SYSTEM,
+                  "messages": [{"role": "user", "content": payload}]},
+            timeout=30,
+        )
+        r.raise_for_status()
+        text = "".join(b.get("text", "") for b in r.json().get("content", []) if b.get("type") == "text").strip()
+    except Exception as e:  # rede, quota, chave inválida...
+        print("Legenda: IA indisponível, a usar modelo:", type(e).__name__)
+        return fallback(kind, facts)
+    if not text or not _numbers(text) <= _numbers(payload):
+        print("Legenda: números fora dos dados, a usar modelo.")
+        return fallback(kind, facts)
+    return text
+
+
+def save_caption(png_path, kind, facts):
+    path = os.path.splitext(png_path)[0] + ".txt"
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(make_caption(kind, facts))
+    return path
