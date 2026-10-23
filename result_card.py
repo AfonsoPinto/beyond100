@@ -423,6 +423,7 @@ def fetch_match(match_id):
 
 # ---------- acompanhamento mínimo (só ids, para respeitar os termos de armazenamento) ----------
 STATE_FILE = "tracked.json"
+MIN_AGE_BEFORE_CHECK_S = 45 * 60
 TRACK_MAX_AGE_H = 48  # ids mais antigos são apagados
 
 
@@ -503,13 +504,19 @@ PAGE_TEXT = {
            "h1a": "Tennis beyond", "h1b": "the top 100.",
            "desc": "Live scores, clean result cards and the stories from the Challenger, ITF and WTA courts.",
            "follow": "Follow @beyond100.tennis", "all": "All results",
-           "note": "Scores are provided for information only and may contain delays or errors."},
+           "note": "Scores are provided for information only and may contain delays or errors.",
+           "f_all": "All", "f_men": "Men", "f_women": "Women", "f_singles": "Singles", "f_doubles": "Doubles",
+           "f_alltour": "All tournaments", "f_matches": "matches", "f_more": "Show more",
+           "f_tournament": "Tournament", "f_player": "Search player"},
     "pt": {"title": "Últimos resultados", "lead": "Challenger, ITF e o circuito para lá do top 100.",
            "empty": "Ainda sem resultados. Volta em breve.", "nav": "Resultados", "home": "Início",
            "h1a": "Ténis para lá", "h1b": "do top 100.",
            "desc": "Resultados ao vivo, cartões limpos e as histórias dos campos de Challenger, ITF e WTA.",
            "follow": "Segue @beyond100.tennis", "all": "Todos os resultados",
-           "note": "Os resultados são apenas informativos e podem conter atrasos ou erros."},
+           "note": "Os resultados são apenas informativos e podem conter atrasos ou erros.",
+           "f_all": "Todos", "f_men": "Masculino", "f_women": "Feminino", "f_singles": "Singulares", "f_doubles": "Pares",
+           "f_alltour": "Todos os torneios", "f_matches": "jogos", "f_more": "Mostrar mais",
+           "f_tournament": "Torneio", "f_player": "Pesquisar jogador"},
 }
 
 EMBLEM_SVG = """<svg viewBox="0 0 600 600" role="img" aria-label="Beyond100" class="emb">
@@ -522,7 +529,8 @@ EMBLEM_SVG = """<svg viewBox="0 0 600 600" role="img" aria-label="Beyond100" cla
 <text x="300" y="352" font-family="Georgia,'Times New Roman',serif" font-weight="700" font-size="150" fill="#f7f2e6" text-anchor="middle">100</text>
 </svg>"""
 
-SITE_CSS = """
+import webapp
+SITE_CSS_OLD = """
 :root{--g:#0e3a2d;--deep:#09281f;--c:#f7f2e6;--v:#d9f23d;--s:#b0c4b7;--e:#2c5d4c}
 *{box-sizing:border-box}
 body{margin:0;background:var(--g);color:var(--c);font:16px/1.5 system-ui,"Segoe UI",Arial,sans-serif}
@@ -558,10 +566,14 @@ footer{color:var(--s);font-size:.8rem;padding:28px 0 44px;border-top:1px solid v
 """
 
 
+SITE_CSS = webapp.CSS
+
+
 def _results_html(results, tr, empty):
     esc = html.escape
     rows = []
     for r in results:
+        _, _, _, tag = webapp.classify(r)
         lines = []
         for i in (0, 1):
             p = r["p%d" % (i + 1)]
@@ -575,8 +587,9 @@ def _results_html(results, tr, empty):
                          f'<div class="ch">{chips}</div></div>')
         meta = " · ".join(x for x in [r["date"], tr["rounds"].get(r["round"].lower(), r["round"]),
                                        tr["surfaces"].get(r.get("surface"), "")] if x)
-        rows.append(f'<article><h3>{esc(r["tournament"])}</h3><p class="m">{esc(meta)}</p>'
-                    f'{lines[0]}{lines[1]}</article>')
+        tagh = f'<span class="tag">{esc(tag)}</span>' if tag else ""
+        rows.append(f'<section class="tg"><h3 class="th">{tagh}<span>{esc(webapp.base_tournament(r["tournament"]))}</span></h3>'
+                    f'<div class="mt"><div class="mh">{esc(meta)}</div>{lines[0]}{lines[1]}</div></section>')
     return "\n".join(rows) or f'<p class="empty">{esc(empty)}</p>'
 
 
@@ -620,13 +633,13 @@ def build_site(out_dir="site", player=None):
         q = player.lower()
         results = [r for r in results if q in r["p1"]["name"].lower() or q in r["p2"]["name"].lower()]
     os.makedirs(out_dir, exist_ok=True)
+    singles = [r for r in results if webapp.classify(r)[1] == "singles"]
     home = (f'<section class="hero">{EMBLEM_SVG}<h1>{esc(tx["h1a"])}<br><em>{esc(tx["h1b"])}</em></h1>'
             f'<p>{esc(tx["desc"])}</p><a class="btn" href="{IG_URL}">{esc(tx["follow"])}</a>'
             f'<a class="btn ghost" href="results.html">{esc(tx["title"])}</a></section>'
             f'<h2 class="sec"><span>{esc(tx["title"])}</span><a href="results.html">{esc(tx["all"])} →</a></h2>'
-            f'{_results_html(results[:4], tr, tx["empty"])}')
-    page = (f'<section class="page-h"><h1>{esc(tx["title"])}</h1><p>{esc(tx["lead"])}</p></section>'
-            f'{_results_html(results, tr, tx["empty"])}')
+            f'{_results_html(singles[:4], tr, tx["empty"])}')
+    page = webapp.results_page(results, tr, tx, LANG)
     paths = []
     write_favicons(out_dir)
     for name, body, title in [("index.html", home, "Beyond100 · Tennis beyond the top 100"),
@@ -707,8 +720,13 @@ def upset_event(m):
 def rising_cards(m, out_dir):
     from news_card import render_rising
     os.makedirs(out_dir, exist_ok=True)
-    return [render_rising(e, os.path.join(out_dir, f"news-rising-{m.get('id')}-{i}.png"))
-            for i, e in enumerate(update_ranks(m))]
+    from captions import save_caption
+    paths = []
+    for i, e in enumerate(update_ranks(m)):
+        pth = render_rising(e, os.path.join(out_dir, f"news-rising-{m.get('id')}-{i}.png"))
+        save_caption(pth, "rising", e)
+        paths.append(pth)
+    return paths
 
 
 def upset_cards(m, out_dir):
@@ -717,7 +735,10 @@ def upset_cards(m, out_dir):
     if not e:
         return []
     os.makedirs(out_dir, exist_ok=True)
-    return [render_upset(e, os.path.join(out_dir, f"news-upset-{m.get('id')}.png"))]
+    from captions import save_caption
+    pth = render_upset(e, os.path.join(out_dir, f"news-upset-{m.get('id')}.png"))
+    save_caption(pth, "upset", e)
+    return [pth]
 
 
 def run_results(out_dir, max_checks):
@@ -727,20 +748,34 @@ def run_results(out_dir, max_checks):
         save_state(state)
         sys.exit("Sem jogos em acompanhamento. Corre primeiro com --live.")
     os.makedirs(out_dir, exist_ok=True)
-    for n, mid in enumerate(list(state)):
-        if n >= max_checks:
+    checks = 0
+    for mid in list(state):
+        if now - state[mid] < MIN_AGE_BEFORE_CHECK_S:
+            continue                      # jogo acompanhado há pouco: é improvável que já tenha acabado
+        if checks >= max_checks:
             print(f"Limite de {max_checks} consultas atingido (poupa a quota diária).")
             break
+        checks += 1
         m = fetch_match(mid)
         if m.get("status") == "completed":
-            print("Gerado:", render_card(m, os.path.join(out_dir, f"final-{mid}.png")))
+            from captions import save_caption
+            png = render_card(m, os.path.join(out_dir, f"final-{mid}.png"))
+            print("Gerado:", png)
+            save_caption(png, "final", slim(m))
             add_result(m)
             for pth in rising_cards(m, out_dir) + upset_cards(m, out_dir):
                 print("Notícia:", pth)
             del state[mid]
         else:
             print(f"Jogo {mid}: ainda não terminou (estado: {m.get('status')}).")
+            state[mid] = state.pop(mid)   # vai para o fim da fila: os outros jogos também são verificados
     save_state(state)
+
+
+def is_doubles_match(m):
+    """Pares (a quota gratuita é pequena: só acompanhamos singulares)."""
+    names = [((m.get("players") or {}).get(k) or {}).get("name", "") for k in ("p1", "p2")]
+    return "DOUBLES" in (m.get("tournament") or "").upper() or any(" / " in n for n in names)
 
 
 def has_portuguese(m):
@@ -795,6 +830,8 @@ if __name__ == "__main__":
         sys.exit(0)
 
     matches = fetch_live() if a.live else SAMPLES
+    if a.live:
+        matches = [m for m in matches if not is_doubles_match(m)]
     all_matches = matches
     if a.pt:
         matches = [m for m in matches if has_portuguese(m)]
