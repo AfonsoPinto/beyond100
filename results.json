@@ -484,5 +484,85 @@
       ]
     ],
     "winner": 1
+  },
+  {
+    "id": 209377,
+    "date": "2026-10-23",
+    "tournament": "M15 Bol 2",
+    "round": "1/8-finals",
+    "surface": "clay",
+    "p1": {
+      "name": "Geoffrey Blancaneaux",
+      "country": "fra"
+    },
+    "p2": {
+      "name": "Matei Todoran",
+      "country": "rou"
+    },
+    "games": [
+      [
+        6,
+        6
+      ],
+      [
+        4,
+        3
+      ]
+    ],
+    "winner": 1
+  },
+  {
+    "id": 209380,
+    "date": "2026-10-23",
+    "tournament": "W15 Bol 2",
+    "round": "1/8-finals",
+    "surface": "clay",
+    "p1": {
+      "name": "Mia Horvit",
+      "country": "usa"
+    },
+    "p2": {
+      "name": "Anita Tu",
+      "country": "usa"
+    },
+    "games": [
+      [
+        6,
+        6,
+        10
+      ],
+      [
+        7,
+        1,
+        8
+      ]
+    ],
+    "winner": 1
+  },
+  {
+    "id": 209382,
+    "date": "2026-10-23",
+    "tournament": "ITF W15 Bol 2 Women",
+    "round": "Round of 16",
+    "surface": "clay",
+    "p1": {
+      "name": "Iva Primorac",
+      "country": "cro"
+    },
+    "p2": {
+      "name": "Gorska",
+      "country": "pol"
+    },
+    "games": [
+      [
+        6,
+        4
+      ],
+      [
+        7,
+        5
+      ]
+    ],
+    "winner": 0
   }
 ]
