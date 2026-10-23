@@ -333,14 +333,14 @@
     "country": "ita",
     "rank": 329,
     "date": "2026-10-23",
-    "ts": 1792768646.4775178
+    "ts": 1792789692.8103423
   },
   "555": {
     "name": "Oriol Roca Batalla",
     "country": "esp",
     "rank": 304,
     "date": "2026-10-23",
-    "ts": 1792768646.4775178
+    "ts": 1792789692.8103423
   },
   "662": {
     "name": "Ane Mintegi Del Olmo",
@@ -1216,5 +1216,89 @@
     "rank": 545,
     "date": "2026-10-23",
     "ts": 1792771691.8065295
+  },
+  "2420": {
+    "name": "Hanna Chang",
+    "country": "usa",
+    "rank": 287,
+    "date": "2026-10-23",
+    "ts": 1792789692.7912405
+  },
+  "5099": {
+    "name": "Jo-Yee Chan",
+    "country": "usa",
+    "rank": 651,
+    "date": "2026-10-23",
+    "ts": 1792789692.7912405
+  },
+  "10211": {
+    "name": "Stijn Paardekooper",
+    "country": "ned",
+    "rank": 846,
+    "date": "2026-10-23",
+    "ts": 1792789692.7949564
+  },
+  "618": {
+    "name": "Aidan Mayo",
+    "country": "usa",
+    "rank": 336,
+    "date": "2026-10-23",
+    "ts": 1792789692.7966
+  },
+  "2009": {
+    "name": "Sander Jong",
+    "country": "ned",
+    "rank": 451,
+    "date": "2026-10-23",
+    "ts": 1792789692.7966
+  },
+  "232": {
+    "name": "Luca van Assche",
+    "country": "fra",
+    "rank": 48,
+    "date": "2026-10-23",
+    "ts": 1792789692.8006904
+  },
+  "664": {
+    "name": "Lorenzo Musetti",
+    "country": "ita",
+    "rank": 26,
+    "date": "2026-10-23",
+    "ts": 1792789692.8006904
+  },
+  "364": {
+    "name": "Gray Voelzke",
+    "country": "usa",
+    "rank": 1371,
+    "date": "2026-10-23",
+    "ts": 1792789692.8022804
+  },
+  "12131": {
+    "name": "Felipe Pagnacco",
+    "country": "arg",
+    "rank": 1909,
+    "date": "2026-10-23",
+    "ts": 1792789692.8054693
+  },
+  "107": {
+    "name": "Santiago Rodriguez Taverna",
+    "country": "arg",
+    "rank": 443,
+    "date": "2026-10-23",
+    "ts": 1792789692.8070958
+  },
+  "420": {
+    "name": "Gustavo Heide",
+    "country": "bra",
+    "rank": 114,
+    "date": "2026-10-23",
+    "ts": 1792789692.8070958
+  },
+  "10934": {
+    "name": "Miguel Angel Machado",
+    "country": "esp",
+    "rank": 1620,
+    "date": "2026-10-23",
+    "ts": 1792789692.8087277
   }
 }
