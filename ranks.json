@@ -18,7 +18,7 @@
     "country": "aus",
     "rank": 674,
     "date": "2026-10-24",
-    "ts": 1792806220.5695171
+    "ts": 1792807685.2192526
   },
   "2803": {
     "name": "Sandra Samir",
@@ -1425,69 +1425,83 @@
     "country": "jpn",
     "rank": 1149,
     "date": "2026-10-24",
-    "ts": 1792806220.587931
+    "ts": 1792807685.2212486
   },
   "820": {
     "name": "Takuya Kumasaka",
     "country": "jpn",
     "rank": 603,
     "date": "2026-10-24",
-    "ts": 1792806220.587931
+    "ts": 1792807685.2212486
   },
   "8081": {
     "name": "Jana Hossam Salah",
     "country": "egy",
     "rank": 846,
     "date": "2026-10-24",
-    "ts": 1792806220.5684276
+    "ts": 1792807685.2172256
   },
   "12596": {
     "name": "Jenna Defalco",
     "country": "usa",
     "rank": 875,
     "date": "2026-10-24",
-    "ts": 1792806220.5684276
+    "ts": 1792807685.2172256
   },
   "1944": {
     "name": "Isaac Becroft",
     "country": "nzl",
     "rank": 613,
     "date": "2026-10-24",
-    "ts": 1792806220.5695171
+    "ts": 1792807685.2192526
   },
   "5088": {
     "name": "Alexander Guajardo",
     "country": "usa",
     "rank": 2148,
     "date": "2026-10-24",
-    "ts": 1792806220.5938368
+    "ts": 1792807685.237013
   },
   "885": {
     "name": "Kamilla Rakhimova",
     "country": "uzb",
     "rank": 67,
     "date": "2026-10-24",
-    "ts": 1792806220.5949538
+    "ts": 1792807685.23898
   },
   "2712": {
     "name": "Shiho Tsujioka",
     "country": "jpn",
     "rank": 858,
     "date": "2026-10-24",
-    "ts": 1792806220.5949538
+    "ts": 1792807685.23898
   },
   "304": {
     "name": "Yuliia Starodubtseva",
     "country": "ukr",
     "rank": 50,
     "date": "2026-10-24",
-    "ts": 1792806220.5960739
+    "ts": 1792807685.2409444
   },
   "548": {
     "name": "Aliaksandra Sasnovich",
     "country": "blr",
     "rank": 122,
     "date": "2026-10-24",
-    "ts": 1792806220.5960739
+    "ts": 1792807685.2409444
+  },
+  "2981": {
+    "name": "Aruzhan Sagandikova",
+    "country": "kaz",
+    "rank": 678,
+    "date": "2026-10-24",
+    "ts": 1792807685.223211
+  },
+  "10854": {
+    "name": "Jing-Jing Lu",
+    "country": "chn",
+    "rank": 1131,
+    "date": "2026-10-24",
+    "ts": 1792807685.2251801
   }
 }
