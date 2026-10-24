@@ -292,6 +292,60 @@
     "winner": 2
   },
   {
+    "id": 209426,
+    "date": "2026-10-24",
+    "tournament": "W15 Singapore 3 (Singapore)",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Aruzhan Sagandikova",
+      "country": "kaz"
+    },
+    "p2": {
+      "name": "Violet Apisah",
+      "country": "pap"
+    },
+    "games": [
+      [
+        3,
+        4
+      ],
+      [
+        6,
+        6
+      ]
+    ],
+    "winner": 2
+  },
+  {
+    "id": 209427,
+    "date": "2026-10-24",
+    "tournament": "W15 Singapore 3 (Singapore)",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Alexandra Malova",
+      "country": "rus"
+    },
+    "p2": {
+      "name": "Jing-Jing Lu",
+      "country": "chn"
+    },
+    "games": [
+      [
+        6,
+        3,
+        6
+      ],
+      [
+        1,
+        6,
+        4
+      ]
+    ],
+    "winner": 1
+  },
+  {
     "id": 208297,
     "date": "2026-10-23",
     "tournament": "ITF M25 Mumbai 2 Men Doubles",

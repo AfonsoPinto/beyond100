@@ -31,8 +31,8 @@
     "name": "Kamilla Bartone",
     "country": null,
     "rank": 970,
-    "date": "2026-10-23",
-    "ts": 1792742360.4305987
+    "date": "2026-10-24",
+    "ts": 1792825690.9594793
   },
   "2611": {
     "name": "Radka Zelnickova",
@@ -52,8 +52,8 @@
     "name": "Arda Azkara",
     "country": "tur",
     "rank": 801,
-    "date": "2026-10-23",
-    "ts": 1792742360.4312272
+    "date": "2026-10-24",
+    "ts": 1792825690.9617572
   },
   "2145": {
     "name": "Pieter De Lange",
@@ -73,8 +73,8 @@
     "name": "Oskari Paldanius",
     "country": "fin",
     "rank": 787,
-    "date": "2026-10-23",
-    "ts": 1792742360.4315832
+    "date": "2026-10-24",
+    "ts": 1792825690.9571753
   },
   "857": {
     "name": "Geoffrey Blancaneaux",
@@ -136,8 +136,8 @@
     "name": "Marek Gengel",
     "country": "cze",
     "rank": 419,
-    "date": "2026-10-23",
-    "ts": 1792742360.4334748
+    "date": "2026-10-24",
+    "ts": 1792825690.9617572
   },
   "9066": {
     "name": "Tudor Batin",
@@ -171,8 +171,8 @@
     "name": "Sergey Petrov",
     "country": "rus",
     "rank": 1221,
-    "date": "2026-10-23",
-    "ts": 1792742360.4344282
+    "date": "2026-10-24",
+    "ts": 1792825690.9571753
   },
   "1290": {
     "name": "Amit Vales",
@@ -206,8 +206,8 @@
     "name": "Lamis Abdel Aziz Alhussein",
     "country": "egy",
     "rank": 411,
-    "date": "2026-10-23",
-    "ts": 1792742360.4358997
+    "date": "2026-10-24",
+    "ts": 1792825690.9594793
   },
   "13598": {
     "name": "Kristina Dmitruk",
@@ -221,7 +221,7 @@
     "country": "chn",
     "rank": 448,
     "date": "2026-10-24",
-    "ts": 1792822089.2174811
+    "ts": 1792825690.9663398
   },
   "1016": {
     "name": "Akira Santillan",
@@ -332,15 +332,15 @@
     "name": "Francesco Forti",
     "country": "ita",
     "rank": 329,
-    "date": "2026-10-23",
-    "ts": 1792793286.3714962
+    "date": "2026-10-24",
+    "ts": 1792825690.9801753
   },
   "555": {
     "name": "Oriol Roca Batalla",
     "country": "esp",
     "rank": 304,
-    "date": "2026-10-23",
-    "ts": 1792793286.3714962
+    "date": "2026-10-24",
+    "ts": 1792825690.9801753
   },
   "662": {
     "name": "Ane Mintegi Del Olmo",
@@ -402,8 +402,8 @@
     "name": "Andrea Obradovic",
     "country": "srb",
     "rank": 1191,
-    "date": "2026-10-23",
-    "ts": 1792760893.2112987
+    "date": "2026-10-24",
+    "ts": 1792825690.9478416
   },
   "14782": {
     "name": "Eliska Tichackova",
@@ -591,8 +591,8 @@
     "name": "Imanol Lopez Morillo",
     "country": "esp",
     "rank": 661,
-    "date": "2026-10-23",
-    "ts": 1792757290.7769067
+    "date": "2026-10-24",
+    "ts": 1792825690.9501822
   },
   "4873": {
     "name": "Jeffrey Von der Schulenburg",
@@ -668,8 +668,8 @@
     "name": "Sapfo Sakellaridi",
     "country": "gre",
     "rank": 446,
-    "date": "2026-10-23",
-    "ts": 1792757290.787696
+    "date": "2026-10-24",
+    "ts": 1792825690.9478416
   },
   "8075": {
     "name": "Didi Bredberg Canizares",
@@ -766,15 +766,15 @@
     "name": "Daria Gorska",
     "country": "pol",
     "rank": 1088,
-    "date": "2026-10-23",
-    "ts": 1792764491.4438202
+    "date": "2026-10-24",
+    "ts": 1792825690.9548674
   },
   "2786": {
     "name": "Mia Horvit",
     "country": "usa",
     "rank": 727,
-    "date": "2026-10-23",
-    "ts": 1792768647.2884452
+    "date": "2026-10-24",
+    "ts": 1792825690.9548674
   },
   "2329": {
     "name": "Mihai Alexandru Coman",
@@ -850,8 +850,8 @@
     "name": "Tara Wuerth",
     "country": "cro",
     "rank": 614,
-    "date": "2026-10-23",
-    "ts": 1792768646.4791853
+    "date": "2026-10-24",
+    "ts": 1792825690.9525595
   },
   "2540": {
     "name": "Sara Mikaca",
@@ -878,8 +878,8 @@
     "name": "Alan Wazny",
     "country": "pol",
     "rank": 818,
-    "date": "2026-10-23",
-    "ts": 1792771691.782366
+    "date": "2026-10-24",
+    "ts": 1792825690.9501822
   },
   "719": {
     "name": "Suzan Lamens",
@@ -1537,14 +1537,14 @@
     "country": "usa",
     "rank": 55,
     "date": "2026-10-24",
-    "ts": 1792822089.219298
+    "ts": 1792825690.9686542
   },
   "649": {
     "name": "Ann Li",
     "country": "usa",
     "rank": 25,
     "date": "2026-10-24",
-    "ts": 1792822089.219298
+    "ts": 1792825690.9686542
   },
   "1196": {
     "name": "Polina Iatcenko",
@@ -1712,7 +1712,7 @@
     "country": "aus",
     "rank": 169,
     "date": "2026-10-24",
-    "ts": 1792822089.2174811
+    "ts": 1792825690.9663398
   },
   "681": {
     "name": "Elena Pridankina",
@@ -1733,27 +1733,55 @@
     "country": "usa",
     "rank": 161,
     "date": "2026-10-24",
-    "ts": 1792822089.2229283
+    "ts": 1792825690.9709227
   },
   "1593": {
     "name": "Jeline Vandromme",
     "country": "bel",
     "rank": 123,
     "date": "2026-10-24",
-    "ts": 1792822089.2229283
+    "ts": 1792825690.9709227
   },
   "453": {
     "name": "Oleksandra Oliynykova",
     "country": "ukr",
     "rank": 62,
     "date": "2026-10-24",
-    "ts": 1792822089.2397425
+    "ts": 1792825690.9732342
   },
   "1580": {
     "name": "Mai Hontama",
     "country": "jpn",
     "rank": 168,
     "date": "2026-10-24",
-    "ts": 1792822089.2397425
+    "ts": 1792825690.9732342
+  },
+  "767": {
+    "name": "Viktorija Golubic",
+    "country": "sui",
+    "rank": 82,
+    "date": "2026-10-24",
+    "ts": 1792825690.9755378
+  },
+  "1216": {
+    "name": "Maya Joint",
+    "country": "aus",
+    "rank": 90,
+    "date": "2026-10-24",
+    "ts": 1792825690.9755378
+  },
+  "250": {
+    "name": "Ekaterine Gorgodze",
+    "country": "geo",
+    "rank": 178,
+    "date": "2026-10-24",
+    "ts": 1792825690.977832
+  },
+  "1582": {
+    "name": "Tatiana Prozorova",
+    "country": "rus",
+    "rank": 177,
+    "date": "2026-10-24",
+    "ts": 1792825690.977832
   }
 }
