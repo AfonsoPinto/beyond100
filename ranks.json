@@ -25,7 +25,7 @@
     "country": "egy",
     "rank": 418,
     "date": "2026-10-24",
-    "ts": 1792832884.197979
+    "ts": 1792836489.405434
   },
   "2790": {
     "name": "Kamilla Bartone",
@@ -46,7 +46,7 @@
     "country": "cro",
     "rank": 704,
     "date": "2026-10-24",
-    "ts": 1792832884.197979
+    "ts": 1792836489.405434
   },
   "1647": {
     "name": "Arda Azkara",
@@ -158,7 +158,7 @@
     "country": "ned",
     "rank": 1023,
     "date": "2026-10-24",
-    "ts": 1792832884.2104573
+    "ts": 1792836489.408046
   },
   "950": {
     "name": "Constantin Kouzmine Bittoun",
@@ -179,7 +179,7 @@
     "country": "isr",
     "rank": 574,
     "date": "2026-10-24",
-    "ts": 1792832884.2069597
+    "ts": 1792836489.4106863
   },
   "8057": {
     "name": "Julio Cesar Porras",
@@ -284,7 +284,7 @@
     "country": "gre",
     "rank": 508,
     "date": "2026-10-24",
-    "ts": 1792832884.2069597
+    "ts": 1792836489.4106863
   },
   "4851": {
     "name": "Luka Talan Lopatič",
@@ -333,14 +333,14 @@
     "country": "ita",
     "rank": 329,
     "date": "2026-10-24",
-    "ts": 1792832884.2351878
+    "ts": 1792836489.4518113
   },
   "555": {
     "name": "Oriol Roca Batalla",
     "country": "esp",
     "rank": 304,
     "date": "2026-10-24",
-    "ts": 1792832884.2351878
+    "ts": 1792836489.4518113
   },
   "662": {
     "name": "Ane Mintegi Del Olmo",
@@ -381,8 +381,8 @@
     "name": "Diana Shnaider",
     "country": "rus",
     "rank": 13,
-    "date": "2026-10-23",
-    "ts": 1792760892.5486968
+    "date": "2026-10-24",
+    "ts": 1792836489.4703271
   },
   "696": {
     "name": "Elsa Jacquemot",
@@ -430,8 +430,8 @@
     "name": "Ferdinand Livet Novkirichka",
     "country": "fra",
     "rank": 1232,
-    "date": "2026-10-23",
-    "ts": 1792760893.4871125
+    "date": "2026-10-24",
+    "ts": 1792836489.418212
   },
   "12474": {
     "name": "Fnu Nidunjianzan",
@@ -451,8 +451,8 @@
     "name": "Kasra Rahmani",
     "country": "iri",
     "rank": 727,
-    "date": "2026-10-23",
-    "ts": 1792760893.0045207
+    "date": "2026-10-24",
+    "ts": 1792836489.418212
   },
   "2072": {
     "name": "Nazim Makhlouf",
@@ -521,8 +521,8 @@
     "name": "Kayo Nishimura",
     "country": "jpn",
     "rank": 533,
-    "date": "2026-10-23",
-    "ts": 1792757290.778773
+    "date": "2026-10-24",
+    "ts": 1792836489.4282234
   },
   "2191": {
     "name": "Thijs Boogaard",
@@ -556,8 +556,8 @@
     "name": "Paul Jubb",
     "country": "gbr",
     "rank": 391,
-    "date": "2026-10-23",
-    "ts": 1792764492.2927115
+    "date": "2026-10-24",
+    "ts": 1792836489.4307516
   },
   "2271": {
     "name": "Patrick Brady",
@@ -626,8 +626,8 @@
     "name": "Elena Milovanovic",
     "country": "srb",
     "rank": 422,
-    "date": "2026-10-23",
-    "ts": 1792754887.7537878
+    "date": "2026-10-24",
+    "ts": 1792836489.4232123
   },
   "2454": {
     "name": "Mia Chudejova",
@@ -794,8 +794,8 @@
     "name": "Elena Rybakina",
     "country": "kaz",
     "rank": 1,
-    "date": "2026-10-23",
-    "ts": 1792761218.7430005
+    "date": "2026-10-24",
+    "ts": 1792836489.4703271
   },
   "276": {
     "name": "Katarzyna Kawa",
@@ -836,8 +836,8 @@
     "name": "Thomas Faurel",
     "country": "fra",
     "rank": 321,
-    "date": "2026-10-23",
-    "ts": 1792761218.746881
+    "date": "2026-10-24",
+    "ts": 1792836489.4257154
   },
   "2184": {
     "name": "Fares Zakaria",
@@ -906,8 +906,8 @@
     "name": "Diego Fernandez Flores",
     "country": "chi",
     "rank": 1359,
-    "date": "2026-10-23",
-    "ts": 1792769383.5836706
+    "date": "2026-10-24",
+    "ts": 1792836489.4622786
   },
   "1301": {
     "name": "Angela Fita Boluda",
@@ -1845,90 +1845,216 @@
     "country": "rou",
     "rank": 275,
     "date": "2026-10-24",
-    "ts": 1792832884.2104573
+    "ts": 1792836489.408046
   },
   "4993": {
     "name": "Neus Torner Sensano",
     "country": "esp",
     "rank": 608,
     "date": "2026-10-24",
-    "ts": 1792832884.2157032
+    "ts": 1792836489.413187
   },
   "5494": {
     "name": "Charo Esquiva Banuls",
     "country": "esp",
     "rank": 447,
     "date": "2026-10-24",
-    "ts": 1792832884.2157032
+    "ts": 1792836489.413187
   },
   "808": {
     "name": "Emerson Jones",
     "country": "aus",
     "rank": 134,
     "date": "2026-10-24",
-    "ts": 1792832884.2315886
+    "ts": 1792836489.438376
   },
   "1125": {
     "name": "Hong Yi Cody Wong",
     "country": "hkg",
     "rank": 627,
     "date": "2026-10-24",
-    "ts": 1792832884.2315886
+    "ts": 1792836489.438376
   },
   "190": {
     "name": "Rinky Hijikata",
     "country": "aus",
     "rank": 86,
     "date": "2026-10-24",
-    "ts": 1792832884.2333863
+    "ts": 1792836489.449155
   },
   "536": {
     "name": "Miomir Kecmanovic",
     "country": "srb",
     "rank": 57,
     "date": "2026-10-24",
-    "ts": 1792832884.2333863
+    "ts": 1792836489.449155
   },
   "97": {
     "name": "Pablo Carreno-Busta",
     "country": "esp",
     "rank": 74,
     "date": "2026-10-24",
-    "ts": 1792832884.2369657
+    "ts": 1792836489.4409328
   },
   "1179": {
     "name": "Jacob Fearnley",
     "country": "gbr",
     "rank": 87,
     "date": "2026-10-24",
-    "ts": 1792832884.2369657
+    "ts": 1792836489.4409328
   },
   "230": {
     "name": "Yannick Hanfmann",
     "country": "ger",
     "rank": 59,
     "date": "2026-10-24",
-    "ts": 1792832884.238803
+    "ts": 1792836489.4465094
   },
   "990": {
     "name": "Marcos Giron",
     "country": "usa",
     "rank": 88,
     "date": "2026-10-24",
-    "ts": 1792832884.238803
+    "ts": 1792836489.4465094
   },
   "296": {
     "name": "Yulia Putintseva",
     "country": "kaz",
     "rank": 66,
     "date": "2026-10-24",
-    "ts": 1792832884.2406597
+    "ts": 1792836489.4544375
   },
   "1199": {
     "name": "Hayu Kinoshita",
     "country": "jpn",
     "rank": 221,
     "date": "2026-10-24",
-    "ts": 1792832884.2406597
+    "ts": 1792836489.4544375
+  },
+  "1093": {
+    "name": "Robin Bertrand",
+    "country": "fra",
+    "rank": 420,
+    "date": "2026-10-24",
+    "ts": 1792836489.4157279
+  },
+  "2000": {
+    "name": "Liam Gavrielides",
+    "country": "ger",
+    "rank": 1018,
+    "date": "2026-10-24",
+    "ts": 1792836489.4157279
+  },
+  "30806": {
+    "name": "Daria Lopatetska",
+    "country": "ukr",
+    "rank": 1123,
+    "date": "2026-10-24",
+    "ts": 1792836489.4207337
+  },
+  "102": {
+    "name": "Eliakim Coulibaly",
+    "country": "civ",
+    "rank": 379,
+    "date": "2026-10-24",
+    "ts": 1792836489.4257154
+  },
+  "4848": {
+    "name": "Marie Vogt",
+    "country": "ger",
+    "rank": 448,
+    "date": "2026-10-24",
+    "ts": 1792836489.4282234
+  },
+  "5182": {
+    "name": "Oliver Tarvet",
+    "country": "gbr",
+    "rank": 289,
+    "date": "2026-10-24",
+    "ts": 1792836489.4307516
+  },
+  "855": {
+    "name": "Daria Kasatkina",
+    "country": "aus",
+    "rank": 74,
+    "date": "2026-10-24",
+    "ts": 1792836489.4570565
+  },
+  "1099": {
+    "name": "Yexin Ma",
+    "country": "chn",
+    "rank": 200,
+    "date": "2026-10-24",
+    "ts": 1792836489.4570565
+  },
+  "2383": {
+    "name": "Oriol Font",
+    "country": "esp",
+    "rank": 2206,
+    "date": "2026-10-24",
+    "ts": 1792836489.4597108
+  },
+  "11175": {
+    "name": "Rodrigo Leal",
+    "country": "por",
+    "rank": 1701,
+    "date": "2026-10-24",
+    "ts": 1792836489.4622786
+  },
+  "1291": {
+    "name": "Maddison Inglis",
+    "country": "aus",
+    "rank": 133,
+    "date": "2026-10-24",
+    "ts": 1792836489.4648838
+  },
+  "1579": {
+    "name": "Joanna Garland",
+    "country": "tai",
+    "rank": 160,
+    "date": "2026-10-24",
+    "ts": 1792836489.4648838
+  },
+  "98": {
+    "name": "Lukas Neumayer",
+    "country": "aut",
+    "rank": 168,
+    "date": "2026-10-24",
+    "ts": 1792836489.4674618
+  },
+  "6146": {
+    "name": "Vit Kopřiva",
+    "country": "cze",
+    "rank": 66,
+    "date": "2026-10-24",
+    "ts": 1792836489.4674618
+  },
+  "302": {
+    "name": "Dayana Yastremska",
+    "country": "ukr",
+    "rank": 103,
+    "date": "2026-10-24",
+    "ts": 1792836489.474152
+  },
+  "1101": {
+    "name": "Xiaodi You",
+    "country": "chn",
+    "rank": 212,
+    "date": "2026-10-24",
+    "ts": 1792836489.474152
+  },
+  "28": {
+    "name": "Stefanos Tsitsipas",
+    "country": "gre",
+    "rank": 39,
+    "date": "2026-10-24",
+    "ts": 1792836489.4769619
+  },
+  "221": {
+    "name": "Nikoloz Basilashvili",
+    "country": "geo",
+    "rank": 128,
+    "date": "2026-10-24",
+    "ts": 1792836489.4769619
   }
 }

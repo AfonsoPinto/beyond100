@@ -482,6 +482,60 @@
     "winner": 1
   },
   {
+    "id": 209560,
+    "date": "2026-10-24",
+    "tournament": "M25 Tamworth",
+    "round": "Semifinals",
+    "surface": "hard",
+    "p1": {
+      "name": "Blake Ellis",
+      "country": "aus"
+    },
+    "p2": {
+      "name": "Stefan Vujic",
+      "country": "aus"
+    },
+    "games": [
+      [
+        7,
+        7
+      ],
+      [
+        6,
+        6
+      ]
+    ],
+    "winner": 1
+  },
+  {
+    "id": 209365,
+    "date": "2026-10-24",
+    "tournament": "Tokyo",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Liudmila Samsonova",
+      "country": "rus"
+    },
+    "p2": {
+      "name": "Heather Watson",
+      "country": "gbr"
+    },
+    "games": [
+      [
+        6,
+        5,
+        6
+      ],
+      [
+        2,
+        7,
+        7
+      ]
+    ],
+    "winner": 2
+  },
+  {
     "id": 208297,
     "date": "2026-10-23",
     "tournament": "ITF M25 Mumbai 2 Men Doubles",
