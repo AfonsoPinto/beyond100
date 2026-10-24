@@ -57,6 +57,10 @@ def fallback(kind, facts):
     return f"{tag}"
 
 
+BANNED = re.compile(r"match[- ]?points?|break[- ]?points?|\baces?\b|injur|retire|cramp|crowd|tears|emotional|"
+                    r"career[- ]high|first[- ]ever|record|streak|unbeaten|saved|saves\b|serv(e|ing|ed)\b", re.I)
+
+
 def _numbers(text):
     return set(re.findall(r"\d+", text))
 
@@ -105,8 +109,11 @@ def _make_caption(kind, facts):
             print("Legenda: IA indisponível, a usar modelo:", type(e).__name__)
             return fallback(kind, facts)
         bad = sorted(_numbers(text) - allowed)
-        if text and not bad:
+        banned = sorted({m.group(0).lower() for m in BANNED.finditer(text or "")} - set(BANNED.findall(payload.lower()) if False else []))
+        banned = [w for w in banned if w not in payload.lower()]
+        if text and not bad and not banned:
             return text
+        bad = bad + banned
         print(f"Legenda (tentativa {attempt}): números fora dos dados {bad}.")
         extra = (" IMPORTANT: your previous answer used numbers not in the JSON (" + ", ".join(bad) +
                  "). Rewrite without them; do not do any arithmetic.")
