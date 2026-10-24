@@ -1,35 +1,51 @@
-"""Diagnóstico: o que a API devolve AGORA em direto? (usa 1-2 pedidos da quota). Só imprime nomes públicos de torneios."""
-import collections
+"""Diagnóstico 2: que dados extra o API gratuito oferece? (~5 pedidos da quota). Imprime só chaves e amostras públicas."""
 import json
 
+import requests
+
 import result_card as rc
-import webapp
 
-try:
-    live = rc.fetch_live()
-except Exception as e:
-    print("Erro a obter jogos ao vivo:", type(e).__name__, e)
-    raise SystemExit(0)
 
-print(f"Jogos ao vivo agora: {len(live)}")
-by = collections.OrderedDict()
-for m in live:
-    t = m.get("tournament", "?")
-    r = {"tournament": t, "p1": {"name": (m.get("players", {}).get("p1") or {}).get("name", "")},
-         "p2": {"name": (m.get("players", {}).get("p2") or {}).get("name", "")}}
-    g, kind, lv, tag = webapp.classify(r)
-    by.setdefault((t, lv, tag), []).append(m)
-print("\nTorneio | nível deduzido | tag | nº de jogos")
-for (t, lv, tag), ms in sorted(by.items(), key=lambda kv: (kv[0][1], kv[0][0])):
-    print(f"- {t} | {lv} | {tag or '-'} | {len(ms)}")
-print("\nCampos de um jogo (só chaves):", sorted(live[0].keys()) if live else "-")
-shown = 0
-for (t, lv, tag), ms in by.items():
-    if lv == "other" and t in ("Basel", "Vienna", "Lisbon", "Florence", "Tokyo", "Guangzhou") and shown < 3:
-        m = ms[0]
-        print("\nExemplo (" + t + "):")
-        print(json.dumps({k: v for k, v in m.items() if k not in ("score", "players")}, ensure_ascii=False, default=str)[:600])
-        pl = m.get("players") or {}
-        print("  p1:", {k: v for k, v in (pl.get("p1") or {}).items() if k in ("name", "ranking", "country")},
-              "p2:", {k: v for k, v in (pl.get("p2") or {}).items() if k in ("name", "ranking", "country")})
-        shown += 1
+def get(path, **params):
+    try:
+        r = requests.get(f"{rc.API_BASE}{path}", params=params, headers=rc._headers(), timeout=20)
+        print(f"\n=== GET {path} {params or ''} -> {r.status_code}")
+        if r.status_code != 200:
+            print(r.text[:200])
+            return None
+        return r.json()
+    except Exception as e:
+        print(f"\n=== GET {path} -> erro {type(e).__name__}")
+        return None
+
+
+def short(v, n=900):
+    return json.dumps(v, ensure_ascii=False, default=str)[:n]
+
+
+live = get("/matches", status="live")
+data = (live or {}).get("data", []) if isinstance(live, dict) else []
+print("Jogos ao vivo:", len(data))
+vienna = next((m for m in data if m.get("tournament") == "Vienna" and not m.get("is_doubles")), data[0] if data else None)
+if vienna:
+    print("\n--- Jogo completo (chaves de 1.º nível e valores simples) ---")
+    print(short({k: v for k, v in vienna.items() if k != "players"}))
+    print("\n--- p1 completo ---")
+    print(short((vienna.get("players") or {}).get("p1")))
+    mid = vienna.get("id")
+    one = get(f"/matches/{mid}")
+    if one:
+        print("Chaves do jogo por id:", sorted(one.keys()) if isinstance(one, dict) else type(one))
+        print(short({k: v for k, v in one.items() if k in ("score", "h2h", "stats", "statistics", "analysis", "odds")}, 700))
+up = get("/matches", status="upcoming")
+if isinstance(up, dict):
+    d = up.get("data", [])
+    print("Próximos jogos:", len(d), "| exemplo:", short(d[0], 500) if d else "-")
+t = get("/tournaments")
+if isinstance(t, dict):
+    d = t.get("data", t)
+    print("Torneios (chaves/exemplo):", short(d[:2] if isinstance(d, list) else d, 900))
+pl = get("/players", search="Fearnley")
+if isinstance(pl, dict):
+    d = pl.get("data", pl)
+    print("Jogador (exemplo):", short(d[:1] if isinstance(d, list) else d, 900))
