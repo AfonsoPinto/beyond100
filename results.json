@@ -802,5 +802,59 @@
       ]
     ],
     "winner": 2
+  },
+  {
+    "id": 209394,
+    "date": "2026-10-23",
+    "tournament": "M15 Bol 2",
+    "round": "1/8-finals",
+    "surface": "clay",
+    "p1": {
+      "name": "Michiel De Krom",
+      "country": "ned"
+    },
+    "p2": {
+      "name": "Alan Wazny",
+      "country": "pol"
+    },
+    "games": [
+      [
+        6,
+        5
+      ],
+      [
+        7,
+        7
+      ]
+    ],
+    "winner": 2
+  },
+  {
+    "id": 208303,
+    "date": "2026-10-23",
+    "tournament": "W35 Bakersfield, CA",
+    "round": "Quarter-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Hanna Chang",
+      "country": "usa"
+    },
+    "p2": {
+      "name": "Jo-Yee Chan",
+      "country": "usa"
+    },
+    "games": [
+      [
+        4,
+        6,
+        6
+      ],
+      [
+        6,
+        0,
+        4
+      ]
+    ],
+    "winner": 1
   }
 ]
