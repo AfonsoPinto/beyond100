@@ -18,7 +18,7 @@
     "country": "aus",
     "rank": 674,
     "date": "2026-10-24",
-    "ts": 1792807685.2192526
+    "ts": 1792811285.241087
   },
   "2803": {
     "name": "Sandra Samir",
@@ -1425,14 +1425,14 @@
     "country": "jpn",
     "rank": 1149,
     "date": "2026-10-24",
-    "ts": 1792807685.2212486
+    "ts": 1792811285.2428846
   },
   "820": {
     "name": "Takuya Kumasaka",
     "country": "jpn",
     "rank": 603,
     "date": "2026-10-24",
-    "ts": 1792807685.2212486
+    "ts": 1792811285.2428846
   },
   "8081": {
     "name": "Jana Hossam Salah",
@@ -1453,14 +1453,14 @@
     "country": "nzl",
     "rank": 613,
     "date": "2026-10-24",
-    "ts": 1792807685.2192526
+    "ts": 1792811285.241087
   },
   "5088": {
     "name": "Alexander Guajardo",
     "country": "usa",
     "rank": 2148,
     "date": "2026-10-24",
-    "ts": 1792807685.237013
+    "ts": 1792811285.2558193
   },
   "885": {
     "name": "Kamilla Rakhimova",
@@ -1481,27 +1481,97 @@
     "country": "ukr",
     "rank": 50,
     "date": "2026-10-24",
-    "ts": 1792807685.2409444
+    "ts": 1792811285.2632565
   },
   "548": {
     "name": "Aliaksandra Sasnovich",
     "country": "blr",
     "rank": 122,
     "date": "2026-10-24",
-    "ts": 1792807685.2409444
+    "ts": 1792811285.2632565
   },
   "2981": {
     "name": "Aruzhan Sagandikova",
     "country": "kaz",
     "rank": 678,
     "date": "2026-10-24",
-    "ts": 1792807685.223211
+    "ts": 1792811285.2468538
   },
   "10854": {
     "name": "Jing-Jing Lu",
     "country": "chn",
     "rank": 1131,
     "date": "2026-10-24",
-    "ts": 1792807685.2251801
+    "ts": 1792811285.245043
+  },
+  "677": {
+    "name": "Filip Peliwo",
+    "country": "pol",
+    "rank": 641,
+    "date": "2026-10-24",
+    "ts": 1792811285.2486062
+  },
+  "7959": {
+    "name": "Mikalai Haliak",
+    "country": "BLR",
+    "rank": 898,
+    "date": "2026-10-24",
+    "ts": 1792811285.2486062
+  },
+  "923": {
+    "name": "Luca Staeheli",
+    "country": "sui",
+    "rank": 425,
+    "date": "2026-10-24",
+    "ts": 1792811285.2503676
+  },
+  "5049": {
+    "name": "Boris Butulija",
+    "country": "srb",
+    "rank": 1276,
+    "date": "2026-10-24",
+    "ts": 1792811285.2503676
+  },
+  "291": {
+    "name": "Ashlyn Krueger",
+    "country": "usa",
+    "rank": 55,
+    "date": "2026-10-24",
+    "ts": 1792811285.2685924
+  },
+  "649": {
+    "name": "Ann Li",
+    "country": "usa",
+    "rank": 25,
+    "date": "2026-10-24",
+    "ts": 1792811285.2685924
+  },
+  "1196": {
+    "name": "Polina Iatcenko",
+    "country": null,
+    "rank": 154,
+    "date": "2026-10-24",
+    "ts": 1792811285.2704127
+  },
+  "1905": {
+    "name": "Alexandra Shubladze",
+    "country": null,
+    "rank": 136,
+    "date": "2026-10-24",
+    "ts": 1792811285.2704127
+  },
+  "251": {
+    "name": "Polina Kudermetova",
+    "country": "uzb",
+    "rank": 105,
+    "date": "2026-10-24",
+    "ts": 1792811285.272175
+  },
+  "1105": {
+    "name": "Alevtina Ibragimova",
+    "country": null,
+    "rank": 175,
+    "date": "2026-10-24",
+    "ts": 1792811285.272175
   }
 }
