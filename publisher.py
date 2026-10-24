@@ -21,7 +21,7 @@ POSTS_FILE = "posts.json"
 POSTS_DIR = "posts"
 CAROUSELS_FILE = "carousels.json"
 STORIES_FILE = "stories.json"
-SITE_URL = os.environ.get("SITE_URL", "https://beyond100.pages.dev").rstrip("/")
+SITE_URL = os.environ.get("SITE_URL", "https://beyond100tennis.com").rstrip("/")
 KEEP_DAYS = 30
 
 
