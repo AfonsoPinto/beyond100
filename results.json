@@ -714,6 +714,66 @@
     "q": false
   },
   {
+    "id": 209449,
+    "date": "2026-10-24",
+    "tournament": "W15 Sharm ElSheikh 16",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Sandra Samir",
+      "country": "egy"
+    },
+    "p2": {
+      "name": "Karla Popovic",
+      "country": "cro"
+    },
+    "games": [
+      [
+        6,
+        6,
+        6
+      ],
+      [
+        3,
+        7,
+        3
+      ]
+    ],
+    "winner": 1,
+    "tour": "itf",
+    "gender": "women",
+    "q": false
+  },
+  {
+    "id": 209460,
+    "date": "2026-10-24",
+    "tournament": "M15 Heraklion 9",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Cezar Cretu",
+      "country": "rou"
+    },
+    "p2": {
+      "name": "Fons Van Sambeek",
+      "country": "ned"
+    },
+    "games": [
+      [
+        6,
+        7
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "winner": 1,
+    "tour": "itf",
+    "gender": "men",
+    "q": false
+  },
+  {
     "id": 208297,
     "date": "2026-10-23",
     "tournament": "ITF M25 Mumbai 2 Men Doubles",
