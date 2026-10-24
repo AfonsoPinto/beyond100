@@ -34,7 +34,8 @@
       ],
       "file": "final-208370.png",
       "image": "final-208370-2026-10-24.jpg",
-      "sent": false
+      "sent": true,
+      "sent_at": "2026-10-24 07:14"
     }
   ]
 }
