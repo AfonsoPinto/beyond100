@@ -596,6 +596,64 @@
     "q": false
   },
   {
+    "id": 209433,
+    "date": "2026-10-24",
+    "tournament": "M15 Sharm ElSheikh 14",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Arda Azkara",
+      "country": "tur"
+    },
+    "p2": {
+      "name": "Marek Gengel",
+      "country": "cze"
+    },
+    "games": [
+      [
+        6,
+        7
+      ],
+      [
+        3,
+        6
+      ]
+    ],
+    "winner": 1,
+    "tour": "itf",
+    "gender": "men",
+    "q": false
+  },
+  {
+    "id": 209537,
+    "date": "2026-10-24",
+    "tournament": "W15 Bol 2",
+    "round": "Quarter-finals",
+    "surface": "clay",
+    "p1": {
+      "name": "Tara Wuerth",
+      "country": "cro"
+    },
+    "p2": {
+      "name": "V. Varga",
+      "country": "hun"
+    },
+    "games": [
+      [
+        6,
+        6
+      ],
+      [
+        4,
+        4
+      ]
+    ],
+    "winner": 1,
+    "tour": "itf",
+    "gender": "women",
+    "q": false
+  },
+  {
     "id": 208297,
     "date": "2026-10-23",
     "tournament": "ITF M25 Mumbai 2 Men Doubles",
