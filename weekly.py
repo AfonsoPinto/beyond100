@@ -74,8 +74,13 @@ def week_data(results, today=None):
             key = (margin, -tot)
             if best is None or key < best[0]:
                 best = (key, r)
-    return {"start": start, "end": today, "finals": finals, "stats": stats,
-            "tournaments": len(tourn), "closest": best[1] if best else None}
+    dom = None
+    for r in rs:
+        st = webapp.match_stats(r)
+        if st and (dom is None or st[1] > dom[0]):
+            dom = (st[1], r)
+    return {"start": start, "end": today, "finals": finals, "stats": stats, "_rs": rs,
+            "tournaments": len(tourn), "closest": best[1] if best else None, "dominant": dom[1] if dom else None}
 
 
 # ------------------------------------------------------------ slides
@@ -167,6 +172,50 @@ def slide_closest(wd):
     return img
 
 
+def slide_tournaments(wd):
+    img = _base()
+    d = ImageDraw.Draw(img)
+    _title(d, "Where the action was")
+    counts = {}
+    for r in wd["_rs"]:
+        t = webapp.base_tournament(r.get("tournament", ""))
+        tag = webapp.classify(r)[3]
+        k = (t, tag)
+        counts[k] = counts.get(k, 0) + 1
+    rows = sorted(counts.items(), key=lambda kv: -kv[1])[:6]
+    y = 340
+    for (t, tag), n in rows:
+        d.rounded_rectangle([70, y, W - 70, y + 130], radius=28, fill=DEEP, outline=EDGE, width=2)
+        d.text((100, y + 40), (tag or "").upper(), font=pc.font(SANS_B, 22), fill=VOLT, anchor="lm")
+        d.text((100, y + 88), t, font=pc.fit(d, t, SERIF_B, 40, 700), fill=CREAM, anchor="lm")
+        d.text((W - 100, y + 65), f"{n} matches", font=pc.font(SANS_B, 32), fill=SOFT, anchor="rm")
+        y += 150
+    pc._footer(img)
+    return img
+
+
+def slide_dominant(wd):
+    r = wd["dominant"]
+    img = _base()
+    d = ImageDraw.Draw(img)
+    _title(d, "Most dominant win")
+    w = r["winner"]
+    win, los = r["p%d" % w], r["p%d" % (3 - w)]
+    t = webapp.base_tournament(r.get("tournament", ""))
+    d.text((W / 2, 340), f"{t} · {r.get('round', '')}".upper()[:60], font=pc.font(SANS_B, 28), fill=VOLT, anchor="mm")
+    d.text((W / 2, 560), win["name"], font=pc.fit(d, win["name"], SERIF_B, 78, 900), fill=CREAM, anchor="mm")
+    d.text((W / 2, 650), "def.", font=pc.font(SERIF_I, 40), fill=SOFT, anchor="mm")
+    d.text((W / 2, 740), los["name"], font=pc.fit(d, los["name"], SERIF_B, 64, 900), fill=SOFT, anchor="mm")
+    sc = _score(r)
+    d.rounded_rectangle([140, 860, W - 140, 1010], radius=40, fill=VOLT)
+    d.text((W / 2, 935), sc, font=pc.fit(d, sc, SERIF_B, 84, 760), fill=GREEN, anchor="mm")
+    st = webapp.match_stats(r)
+    if st:
+        d.text((W / 2, 1090), f"Won {st[1]}% of all games played", font=pc.font(SANS_B, 30), fill=SOFT, anchor="mm")
+    pc._footer(img)
+    return img
+
+
 def slide_numbers(wd):
     img = _base()
     d = ImageDraw.Draw(img)
@@ -195,23 +244,21 @@ def slide_cta():
     d.text((W / 2, 850), "from Challenger, ITF and WTA events.", font=pc.font(SERIF_I, 48), fill=SOFT, anchor="mm")
     d.rounded_rectangle([200, 960, W - 200, 1070], radius=55, fill=VOLT)
     d.text((W / 2, 1015), "Follow · Save · Share", font=pc.font(SANS_B, 40), fill=GREEN, anchor="mm")
-    d.text((W / 2, 1160), "beyond100.pages.dev", font=pc.font(SANS_B, 36), fill=CREAM, anchor="mm")
+    d.text((W / 2, 1160), "beyond100tennis.com", font=pc.font(SANS_B, 36), fill=CREAM, anchor="mm")
     pc._footer(img)
     return img
 
 
 def build_slides(wd):
+    """Sempre 5 slides (a Make precisa de um número fixo): capa, 2 de conteúdo, números, apelo."""
     slides = [slide_cover(wd)]
-    if wd["finals"]:
-        slides.append(slide_champions(wd))
-    if wd["closest"]:
-        slides.append(slide_closest(wd))
+    slides.append(slide_champions(wd) if wd["finals"] else slide_tournaments(wd))
+    slides.append(slide_closest(wd) if wd["closest"] else slide_dominant(wd))
     slides.append(slide_numbers(wd))
     slides.append(slide_cta())
-    n = len(slides)
     for i, im in enumerate(slides):
-        _dots(im, i, n)
-    return slides[:MAX_SLIDES]
+        _dots(im, i, len(slides))
+    return slides
 
 
 def facts(wd):
