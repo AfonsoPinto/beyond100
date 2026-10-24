@@ -954,6 +954,68 @@
     "q": false
   },
   {
+    "id": 209372,
+    "date": "2026-10-24",
+    "tournament": "Tokyo",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Kayla Day",
+      "country": "usa"
+    },
+    "p2": {
+      "name": "Shuai Zhang",
+      "country": "chn"
+    },
+    "games": [
+      [
+        3,
+        6,
+        5
+      ],
+      [
+        6,
+        3,
+        7
+      ]
+    ],
+    "winner": 2,
+    "tour": "wta",
+    "gender": "women",
+    "q": false
+  },
+  {
+    "id": 209409,
+    "date": "2026-10-24",
+    "tournament": "Guangzhou",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Dayana Yastremska",
+      "country": "ukr"
+    },
+    "p2": {
+      "name": "Xiaodi You",
+      "country": "chn"
+    },
+    "games": [
+      [
+        7,
+        4,
+        7
+      ],
+      [
+        6,
+        6,
+        6
+      ]
+    ],
+    "winner": 1,
+    "tour": "wta",
+    "gender": "women",
+    "q": false
+  },
+  {
     "id": 208297,
     "date": "2026-10-23",
     "tournament": "ITF M25 Mumbai 2 Men Doubles",
