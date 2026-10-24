@@ -489,6 +489,7 @@ def slim(m):
         "p2": {"name": pl.get("p2", {}).get("name", "?"), "country": pl.get("p2", {}).get("country")},
         "games": [list(games[0]), list(games[1])],
         "winner": winner_index(m),
+        "tour": m.get("tour"), "gender": m.get("gender"), "q": bool(m.get("is_qualifying")),
     }
 
 
@@ -611,7 +612,7 @@ def _shell(title, body, tx, root=""):
             f'<link rel="apple-touch-icon" href="{root}favicon.png">\n'
             f'<style>{SITE_CSS}</style></head><body><div class="wrap">\n'
             f'<nav><a class="brand" href="{root}index.html">BEYOND100</a><div>'
-            f'<a href="{root}results.html">{esc(tx["nav"])}</a><a href="{IG_URL}">Instagram</a></div></nav>\n'
+            f'<a href="{root}results.html">{esc(tx["nav"])}</a><a href="{root}players.html">{esc(tx.get("players", "Players"))}</a><a href="{IG_URL}">Instagram</a></div></nav>\n'
             f'{body}\n<footer>{esc(tx["note"])}</footer></div></body></html>')
 
 
@@ -646,14 +647,16 @@ def build_site(out_dir="site", player=None):
             f'<p>{esc(tx["desc"])}</p><a class="btn" href="{IG_URL}">{esc(tx["follow"])}</a>'
             f'<a class="btn ghost" href="results.html">{esc(tx["title"])}</a></section>'
             f'<h2 class="sec"><span>{esc(tx["title"])}</span><a href="results.html">{esc(tx["all"])} →</a></h2>'
-            f'{_results_html(singles[:4], tr, tx["empty"])}')
+            f'{_results_html(singles[:4], tr, tx["empty"])}'
+            f'{webapp.week_block(webapp.week_numbers(results), tx)}')
     page = webapp.results_page(results, tr, tx, LANG)
     paths = []
     write_favicons(out_dir)
     if os.path.isdir("posts"):                         # JPEGs dos posts (o Instagram vai buscá-los a este endereço)
         shutil.copytree("posts", os.path.join(out_dir, "posts"), dirs_exist_ok=True)
     for name, body, title in [("index.html", home, "Beyond100 · Tennis beyond the top 100"),
-                              ("results.html", page, "Beyond100 · " + tx["title"])]:
+                              ("results.html", page, "Beyond100 · " + tx["title"]),
+                              ("players.html", webapp.players_page(results, tx), "Beyond100 · " + tx.get("players", "Players"))]:
         path = os.path.join(out_dir, name)
         with open(path, "w", encoding="utf-8") as f:
             f.write(_shell(title, body, tx))
@@ -675,9 +678,16 @@ def build_site(out_dir="site", player=None):
 
 # ---------- notícias a partir de dados reais (nada é inventado) ----------
 RANKS_FILE = "ranks.json"
-PHOTO_BONUS = float(os.environ.get("PHOTO_BONUS", "2"))          # bónus se o vencedor tem foto licenciada
-NO_PHOTO_EXTRA = float(os.environ.get("NO_PHOTO_EXTRA", "1"))   # sem foto, o limiar sobe
-UPSET_GAP = int(os.environ.get("UPSET_GAP", "80"))   # diferença mínima de ranking para ser "surpresa"
+def _env(name, default):
+    v = os.environ.get(name)
+    return default if v is None or not v.strip() else v
+
+
+PHOTO_BONUS = float(_env("PHOTO_BONUS", "2"))          # bónus se o vencedor tem foto licenciada
+NO_PHOTO_EXTRA = float(_env("NO_PHOTO_EXTRA", "1"))   # sem foto, o limiar sobe
+UPSET_GAP = int(os.environ.get("UPSET_GAP", "80"))
+UPSET_MAX_LOSER_RANK = int(_env("UPSET_MAX_LOSER_RANK", "250"))   # o derrotado tem de ser top 250 para contar como surpresa
+MIN_ITF_TIER = int(_env("MIN_ITF_TIER", "60"))                      # ITF só é publicado a partir de W60/M60 (M15/M25/W35... ficam só no site)   # diferença mínima de ranking para ser "surpresa"
 RISING_MAX_JUMP = 150                                 # saltos maiores são tratados como erro nos dados
 RANK_MAX_AGE_D = 60                                   # só compara com rankings vistos nos últimos 60 dias
 
@@ -726,7 +736,7 @@ def upset_event(m):
         return None
     pw, pl = m["players"]["p%d" % w], m["players"]["p%d" % (3 - w)]
     rw, rl = pw.get("ranking"), pl.get("ranking")
-    if not (isinstance(rw, int) and isinstance(rl, int)) or rw - rl < UPSET_GAP:
+    if not (isinstance(rw, int) and isinstance(rl, int)) or rw - rl < UPSET_GAP or rl > UPSET_MAX_LOSER_RANK:
         return None
     games = (m.get("score") or {}).get("games") or [[], []]
     mine, other = games[w - 1], games[2 - w]
@@ -742,8 +752,8 @@ def upset_event(m):
 
 
 POSTS_FILE = "posts.json"
-POST_MIN_SCORE = float(os.environ.get("POST_MIN_SCORE", "4"))
-MAX_POSTS_PER_DAY = int(os.environ.get("MAX_POSTS_PER_DAY", "3"))
+POST_MIN_SCORE = float(_env("POST_MIN_SCORE", "4"))
+MAX_POSTS_PER_DAY = int(_env("MAX_POSTS_PER_DAY", "3"))
 
 
 def interest(m):
@@ -754,7 +764,9 @@ def interest(m):
     if not w or max(sets) < 2:                      # walkover / desistência: não publicar
         return 0.0, []
     score, why = 0.0, []
-    lv = _priority(m)
+    if m.get("is_qualifying"):                       # qualificação: só no site
+        return 0.0, []
+    lv = int(_priority(m))
     score += {0: 3, 1: 2, 2: 0.5, 3: 0}[lv]
     if lv <= 1:
         why.append({0: "tour", 1: "challenger"}[lv])
@@ -787,11 +799,33 @@ def _who(p):
     return {"name": p.get("name", ""), "rank": p.get("ranking"), "photo": fp, "credit": credit}
 
 
+def _headline(why, ev):
+    """Frase curta para o cartão, só a partir de factos verificados (sem inventar)."""
+    if ev:
+        return ev["headline"]
+    if "final" in why:
+        return "Wins the title." if LANG == "en" else "Vence o torneio."
+    if "comeback" in why:
+        return "Down a set, wins in three." if LANG == "en" else "Perdeu o 1.º set e vira."
+    if "semifinal" in why:
+        return "Into the final." if LANG == "en" else "Está na final."
+    if "quarterfinal" in why:
+        return "Into the semifinals." if LANG == "en" else "Está nas meias-finais."
+    return ""
+
+
 def maybe_post(m, out_dir):
     """Se o jogo for suficientemente interessante (e não houver já posts a mais hoje), gera o cartão com foto."""
     from photo_cards import render_match_photo
     from captions import save_caption
     import webapp
+    import re as _re
+    _g, _k, _lv, _tag = webapp.classify(webapp.api_view(m))
+    if _lv == "itf":
+        _n = _re.search(r"(\d+)", _tag or "")
+        if not _n or int(_n.group(1)) < MIN_ITF_TIER:
+            print(f"Jogo {m.get('id')}: {_tag or 'ITF'} abaixo de {MIN_ITF_TIER}, fica só no site.")
+            return None
     score, why = interest(m)
     # prioridade a jogos COM imagem: com foto licenciada ganha bónus; sem foto precisa de mais interesse
     _w = winner_index(m)
@@ -811,10 +845,10 @@ def maybe_post(m, out_dir):
     g = (m.get("score") or {}).get("games") or [[], []]
     sets = list(zip(g[w - 1], g[2 - w]))
     ev = upset_event(m)
-    _, _, _, tag = webapp.classify({"tournament": m.get("tournament", ""), "p1": {"name": pw.get("name", "")}, "p2": {"name": pl.get("name", "")}})
+    _, _, _, tag = webapp.classify(webapp.api_view(m))
     d = {"winner": _who(pw), "loser": _who(pl), "sets": sets,
          "tournament": m.get("tournament", ""), "round": round_pt(m.get("round")),
-         "level": tag.upper(), "tag": "UPSET" if ev else "", "headline": ev["headline"] if ev else ""}
+         "level": tag.upper(), "tag": "UPSET" if ev else "", "headline": _headline(why, ev)}
     pdir = os.path.join(out_dir, "post")
     os.makedirs(pdir, exist_ok=True)
     png = render_match_photo(d, os.path.join(pdir, f"final-{m.get('id')}.png"))
@@ -843,7 +877,7 @@ def rising_cards(m, out_dir):
         pl = next((((m.get("players") or {}).get(k) or {}) for k in ("p1", "p2")
                    if ((m.get("players") or {}).get(k) or {}).get("name") == e["player"]), {"name": e["player"]})
         fp, credit = find_photo(pl)
-        women = webapp.classify({"tournament": m.get("tournament", ""), "p1": {"name": ""}, "p2": {"name": ""}})[0] == "women"
+        women = webapp.classify(webapp.api_view(m))[0] == "women"
         d = {"player": e["player"], "rank_now": e["rank_now"], "rank_before": e["rank_before"],
              "system": "WTA" if women else "ATP", "headline": e["headline"].rstrip("."),
              "context": e["context"], "photo": fp, "credit": credit}
@@ -911,11 +945,10 @@ def is_doubles_match(m):
 
 
 def _priority(m):
-    """Menor = mais importante: Tour, Challenger, ITF; depois o resto."""
+    """Menor = mais importante: Tour, Challenger, ITF; depois o resto. Qualificação vale menos."""
     import webapp
-    names = [((m.get("players") or {}).get(k) or {}).get("name", "") for k in ("p1", "p2")]
-    _, _, level, _ = webapp.classify({"tournament": m.get("tournament", ""), "p1": {"name": names[0]}, "p2": {"name": names[1]}})
-    return webapp.LEVEL_ORDER.get(level, 3)
+    _, _, level, _ = webapp.classify(webapp.api_view(m))
+    return webapp.LEVEL_ORDER.get(level, 3) + (0.5 if m.get("is_qualifying") else 0)
 
 
 def has_portuguese(m):
