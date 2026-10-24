@@ -505,7 +505,7 @@ def slim(m):
         "p2": {"name": pl.get("p2", {}).get("name", "?"), "country": pl.get("p2", {}).get("country")},
         "games": [list(games[0]), list(games[1])],
         "winner": winner_index(m),
-        "tour": m.get("tour"), "gender": m.get("gender"), "q": bool(m.get("is_qualifying")),
+        "tour": m.get("tour"), "gender": m.get("gender"), "q": is_qual(m),
     }
 
 
@@ -805,7 +805,7 @@ def interest(m):
     if not w or max(sets) < 2:                      # walkover / desistência: não publicar
         return 0.0, []
     score, why = 0.0, []
-    if m.get("is_qualifying"):                       # qualificação: só no site
+    if is_qual(m):                       # qualificação: só no site
         return 0.0, []
     lv = int(_priority(m))                          # a parte decimal é só desempate
     score += {0: 3, 1: 2, 2: 0.5, 3: 0}[lv]
@@ -1012,6 +1012,12 @@ def is_doubles_match(m):
     return "DOUBLES" in (m.get("tournament") or "").upper() or any(" / " in n for n in names)
 
 
+def is_qual(m):
+    """A API marca por vezes jogos de quadro principal (ex.: meias-finais de Viena) como qualificação.
+    Uma qualificação nunca chega a QF/SF/final, por isso essas rondas nunca contam como qualificação."""
+    return bool(m.get("is_qualifying")) and str(m.get("round_code") or "").upper() not in ("QF", "SF", "F")
+
+
 def _priority(m):
     """Menor = mais importante: Tour, Challenger, ITF; depois o resto. Qualificação vale menos."""
     import webapp
@@ -1019,7 +1025,7 @@ def _priority(m):
     # desempate: jogos com jogadores mais bem ranqueados primeiro (mais fotos livres, mais interesse)
     ranks = [((m.get("players") or {}).get(k) or {}).get("ranking") for k in ("p1", "p2")]
     best = min([r for r in ranks if isinstance(r, int)] or [900])
-    return webapp.LEVEL_ORDER.get(level, 3) + (0.5 if m.get("is_qualifying") else 0) + min(best, 900) / 10000
+    return webapp.LEVEL_ORDER.get(level, 3) + (0.5 if is_qual(m) else 0) + min(best, 900) / 10000
 
 
 def has_portuguese(m):
