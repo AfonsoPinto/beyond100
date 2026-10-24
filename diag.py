@@ -22,5 +22,14 @@ for m in live:
 print("\nTorneio | nível deduzido | tag | nº de jogos")
 for (t, lv, tag), ms in sorted(by.items(), key=lambda kv: (kv[0][1], kv[0][0])):
     print(f"- {t} | {lv} | {tag or '-'} | {len(ms)}")
-lvls = collections.Counter(lv for (_, lv, _) in by for _ in by[(_, lv, _)] if False)
 print("\nCampos de um jogo (só chaves):", sorted(live[0].keys()) if live else "-")
+shown = 0
+for (t, lv, tag), ms in by.items():
+    if lv == "other" and t in ("Basel", "Vienna", "Lisbon", "Florence", "Tokyo", "Guangzhou") and shown < 3:
+        m = ms[0]
+        print("\nExemplo (" + t + "):")
+        print(json.dumps({k: v for k, v in m.items() if k not in ("score", "players")}, ensure_ascii=False, default=str)[:600])
+        pl = m.get("players") or {}
+        print("  p1:", {k: v for k, v in (pl.get("p1") or {}).items() if k in ("name", "ranking", "country")},
+              "p2:", {k: v for k, v in (pl.get("p2") or {}).items() if k in ("name", "ranking", "country")})
+        shown += 1
