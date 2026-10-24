@@ -19,7 +19,11 @@ SYSTEM = (
     "Rules: use ONLY the facts in the JSON you are given. Never invent names, scores, rankings, "
     "records, quotes or dates. Max 3 short lines, then one question to the reader, then 3-5 "
     "relevant hashtags (e.g. #tennis #challengertennis). At most 1 emoji. English. "
-    "Output the caption text only."
+    "Every number you write must appear literally in the JSON. Never compute anything (no differences, "
+    "totals, percentages, counts of sets or games). Use the ranking_gap value if given, otherwise do not mention gaps. "
+    "Do not describe events that are not in the JSON: no match points, breaks, aces, injuries, serving, "
+    "crowd, emotions, records, streaks or career context. Stick to who won, the score, the round, the "
+    "tournament, rankings and the listed reasons. Output the caption text only."
 )
 
 
@@ -75,28 +79,39 @@ def make_caption(kind, facts):
     return _finish(_make_caption(kind, facts))
 
 
+def _ask(key, payload, extra=""):
+    r = requests.post(
+        API_URL,
+        headers={"x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json"},
+        json={"model": MODEL, "max_tokens": 300, "system": SYSTEM + extra,
+              "messages": [{"role": "user", "content": payload}]},
+        timeout=30,
+    )
+    r.raise_for_status()
+    return "".join(b.get("text", "") for b in r.json().get("content", []) if b.get("type") == "text").strip()
+
+
 def _make_caption(kind, facts):
     key = os.environ.get("ANTHROPIC_API_KEY")
     if not key:
         return fallback(kind, facts)
     payload = json.dumps({"kind": kind, "facts": facts}, ensure_ascii=False)
-    try:
-        r = requests.post(
-            API_URL,
-            headers={"x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json"},
-            json={"model": MODEL, "max_tokens": 300, "system": SYSTEM,
-                  "messages": [{"role": "user", "content": payload}]},
-            timeout=30,
-        )
-        r.raise_for_status()
-        text = "".join(b.get("text", "") for b in r.json().get("content", []) if b.get("type") == "text").strip()
-    except Exception as e:  # rede, quota, chave inválida...
-        print("Legenda: IA indisponível, a usar modelo:", type(e).__name__)
-        return fallback(kind, facts)
-    if not text or not _numbers(text) <= _numbers(payload):
-        print("Legenda: números fora dos dados, a usar modelo.")
-        return fallback(kind, facts)
-    return text
+    allowed = _numbers(payload)
+    extra = ""
+    for attempt in (1, 2):                      # uma segunda tentativa, mais restrita, antes de usar o modelo simples
+        try:
+            text = _ask(key, payload, extra)
+        except Exception as e:  # rede, quota, chave inválida...
+            print("Legenda: IA indisponível, a usar modelo:", type(e).__name__)
+            return fallback(kind, facts)
+        bad = sorted(_numbers(text) - allowed)
+        if text and not bad:
+            return text
+        print(f"Legenda (tentativa {attempt}): números fora dos dados {bad}.")
+        extra = (" IMPORTANT: your previous answer used numbers not in the JSON (" + ", ".join(bad) +
+                 "). Rewrite without them; do not do any arithmetic.")
+    print("Legenda: a usar modelo simples.")
+    return fallback(kind, facts)
 
 
 def save_caption(png_path, kind, facts):
