@@ -2,7 +2,14 @@ name: Update Beyond100
 on:
   schedule:
     - cron: "7 * * * *"   # every hour at minute 7 (free API tier: 100 requests/day)
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      checks:
+        description: "Jogos a confirmar nesta execução (normal: 2; manual: até 8)"
+        default: "2"
+      min_age:
+        description: "Minutos antes de confirmar um jogo (normal: 45; manual: 15)"
+        default: "45"
 permissions:
   contents: write
 concurrency:
@@ -22,6 +29,8 @@ jobs:
           LIVETENNIS_KEY: ${{ secrets.LIVETENNIS_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FETCH_PHOTOS: "1"
+          TRACK_MAX_PRIO: ${{ vars.TRACK_MAX_PRIO }}
+          MIN_AGE_MIN: ${{ github.event.inputs.min_age }}
           POST_MIN_SCORE: ${{ vars.POST_MIN_SCORE }}
           MAX_POSTS_PER_DAY: ${{ vars.MAX_POSTS_PER_DAY }}
           NO_PHOTO_EXTRA: ${{ vars.NO_PHOTO_EXTRA }}
@@ -29,7 +38,7 @@ jobs:
           WIKI_CONTACT: ${{ vars.WIKI_CONTACT }}
         run: |
           python result_card.py --live --track-only --max 3 --out out
-          python result_card.py --results --max-checks 2 --out out
+          python result_card.py --results --max-checks ${{ github.event.inputs.checks || '2' }} --out out
           python weekly.py out
           python stories.py out
           python publisher.py prepare out
@@ -47,7 +56,7 @@ jobs:
           git config user.name "beyond100-bot"
           git config user.email "bot@users.noreply.github.com"
           git pull --rebase --autostash || true
-          for f in tracked.json results.json ranks.json posts.json carousels.json stories.json; do
+          for f in tracked.json tracked_prio.json results.json ranks.json posts.json carousels.json stories.json; do
             if [ -f "$f" ]; then git add -f "$f"; fi
           done
           if [ -d posts ]; then git add -A -f posts; fi
