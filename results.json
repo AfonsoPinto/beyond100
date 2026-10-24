@@ -158,6 +158,32 @@
     "winner": 2
   },
   {
+    "id": 209509,
+    "date": "2026-10-24",
+    "tournament": "W35 Bakersfield, CA",
+    "round": "Quarter-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Jana Hossam Salah",
+      "country": "egy"
+    },
+    "p2": {
+      "name": "Jenna Defalco",
+      "country": "usa"
+    },
+    "games": [
+      [
+        6,
+        5
+      ],
+      [
+        7,
+        7
+      ]
+    ],
+    "winner": 2
+  },
+  {
     "id": 208297,
     "date": "2026-10-23",
     "tournament": "ITF M25 Mumbai 2 Men Doubles",

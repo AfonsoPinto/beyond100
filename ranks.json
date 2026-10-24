@@ -1425,14 +1425,14 @@
     "country": "jpn",
     "rank": 1149,
     "date": "2026-10-24",
-    "ts": 1792811285.2428846
+    "ts": 1792814884.5829499
   },
   "820": {
     "name": "Takuya Kumasaka",
     "country": "jpn",
     "rank": 603,
     "date": "2026-10-24",
-    "ts": 1792811285.2428846
+    "ts": 1792814884.5829499
   },
   "8081": {
     "name": "Jana Hossam Salah",
@@ -1502,7 +1502,7 @@
     "country": "chn",
     "rank": 1131,
     "date": "2026-10-24",
-    "ts": 1792811285.245043
+    "ts": 1792814884.584508
   },
   "677": {
     "name": "Filip Peliwo",
@@ -1537,28 +1537,28 @@
     "country": "usa",
     "rank": 55,
     "date": "2026-10-24",
-    "ts": 1792811285.2685924
+    "ts": 1792814884.5965993
   },
   "649": {
     "name": "Ann Li",
     "country": "usa",
     "rank": 25,
     "date": "2026-10-24",
-    "ts": 1792811285.2685924
+    "ts": 1792814884.5965993
   },
   "1196": {
     "name": "Polina Iatcenko",
-    "country": null,
+    "country": "rus",
     "rank": 154,
     "date": "2026-10-24",
-    "ts": 1792811285.2704127
+    "ts": 1792814884.6018488
   },
   "1905": {
     "name": "Alexandra Shubladze",
-    "country": null,
+    "country": "rus",
     "rank": 136,
     "date": "2026-10-24",
-    "ts": 1792811285.2704127
+    "ts": 1792814884.6018488
   },
   "251": {
     "name": "Polina Kudermetova",
@@ -1569,9 +1569,100 @@
   },
   "1105": {
     "name": "Alevtina Ibragimova",
-    "country": null,
+    "country": "rus",
     "rank": 175,
     "date": "2026-10-24",
-    "ts": 1792811285.272175
+    "ts": 1792814884.6001194
+  },
+  "920": {
+    "name": "Ergi Kirkin",
+    "country": "tur",
+    "rank": 646,
+    "date": "2026-10-24",
+    "ts": 1792814884.586281
+  },
+  "1935": {
+    "name": "Taisei Ichikawa",
+    "country": "jpn",
+    "rank": 746,
+    "date": "2026-10-24",
+    "ts": 1792814884.586281
+  },
+  "1074": {
+    "name": "Varvara Panshina",
+    "country": "rus",
+    "rank": 372,
+    "date": "2026-10-24",
+    "ts": 1792814884.588267
+  },
+  "4921": {
+    "name": "Daria Khomutsianskaya",
+    "country": null,
+    "rank": 274,
+    "date": "2026-10-24",
+    "ts": 1792814884.588267
+  },
+  "1059": {
+    "name": "Rada Zolotareva",
+    "country": "rus",
+    "rank": 342,
+    "date": "2026-10-24",
+    "ts": 1792814884.5899816
+  },
+  "1113": {
+    "name": "Xinxin Yao",
+    "country": "chn",
+    "rank": 270,
+    "date": "2026-10-24",
+    "ts": 1792814884.5899816
+  },
+  "193": {
+    "name": "Coleman Chak Lam Wong",
+    "country": "hkg",
+    "rank": 92,
+    "date": "2026-10-24",
+    "ts": 1792814884.5983787
+  },
+  "480": {
+    "name": "Yi Zhou",
+    "country": "chn",
+    "rank": 280,
+    "date": "2026-10-24",
+    "ts": 1792814884.5983787
+  },
+  "2430": {
+    "name": "Rina Saigo",
+    "country": "jpn",
+    "rank": 306,
+    "date": "2026-10-24",
+    "ts": 1792814884.6001194
+  },
+  "41": {
+    "name": "Alycia Parks",
+    "country": "usa",
+    "rank": 64,
+    "date": "2026-10-24",
+    "ts": 1792814884.603639
+  },
+  "12787": {
+    "name": "Ena Shibahara",
+    "country": "jpn",
+    "rank": 492,
+    "date": "2026-10-24",
+    "ts": 1792814884.603639
+  },
+  "1003": {
+    "name": "Liudmila Samsonova",
+    "country": "rus",
+    "rank": 43,
+    "date": "2026-10-24",
+    "ts": 1792814884.6053128
+  },
+  "1206": {
+    "name": "Heather Watson",
+    "country": "gbr",
+    "rank": 384,
+    "date": "2026-10-24",
+    "ts": 1792814884.6053128
   }
 }
