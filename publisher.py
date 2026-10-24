@@ -19,6 +19,7 @@ from PIL import Image
 
 POSTS_FILE = "posts.json"
 POSTS_DIR = "posts"
+CAROUSELS_FILE = "carousels.json"
 SITE_URL = os.environ.get("SITE_URL", "https://beyond100.pages.dev").rstrip("/")
 KEEP_DAYS = 30
 
@@ -97,14 +98,45 @@ def _send_graph(image_url, caption):
     r.raise_for_status()
 
 
+def _send_carousels():
+    """Carrosséis (ex.: resumo semanal): webhook próprio com image_urls e image_1..image_10."""
+    try:
+        with open(CAROUSELS_FILE, encoding="utf-8") as f:
+            queue = json.load(f)
+    except (OSError, ValueError):
+        return
+    pending = [c for c in queue if not c.get("sent")]
+    if not pending:
+        return
+    url = os.environ.get("MAKE_WEBHOOK_CAROUSEL_URL")
+    if not url:
+        print(f"{len(pending)} carrosséis na fila, mas falta MAKE_WEBHOOK_CAROUSEL_URL: nada enviado.")
+        return
+    import requests
+    for c in pending:
+        urls = [f"{SITE_URL}/posts/{n}" for n in c["images"]]
+        body = {"id": c["id"], "caption": c["caption"][:2200], "image_urls": urls}
+        body.update({f"image_{i}": u for i, u in enumerate(urls, 1)})
+        try:
+            requests.post(url, json=body, timeout=30).raise_for_status()
+        except Exception as ex:
+            print(f"Carrossel {c['id']}: falhou ({type(ex).__name__}), tenta de novo mais tarde.")
+            continue
+        c["sent"], c["sent_at"] = True, time.strftime("%Y-%m-%d %H:%M", time.gmtime())
+        with open(CAROUSELS_FILE, "w", encoding="utf-8") as f:
+            json.dump(queue, f, ensure_ascii=False, indent=2)
+        print(f"Carrossel {c['id']}: enviado.")
+
+
 def send():
     posts = _load()
     pending = [(d, e) for d, es in posts.items() for e in es if e.get("image") and not e.get("sent")]
-    if not pending:
-        print("Fila vazia.")
-        return
     if os.environ.get("PUBLISH_AUTO") != "1":
         print(f"{len(pending)} posts na fila, mas PUBLISH_AUTO não está a 1: nada enviado.")
+        return
+    _send_carousels()
+    if not pending:
+        print("Fila vazia.")
         return
     backend = os.environ.get("PUBLISH_BACKEND", "webhook")
     for d, e in pending:
