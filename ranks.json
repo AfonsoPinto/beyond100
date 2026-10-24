@@ -18,7 +18,7 @@
     "country": "aus",
     "rank": 674,
     "date": "2026-10-24",
-    "ts": 1792805626.2974102
+    "ts": 1792806220.5695171
   },
   "2803": {
     "name": "Sandra Samir",
@@ -1425,34 +1425,69 @@
     "country": "jpn",
     "rank": 1149,
     "date": "2026-10-24",
-    "ts": 1792800490.6918387
+    "ts": 1792806220.587931
   },
   "820": {
     "name": "Takuya Kumasaka",
     "country": "jpn",
     "rank": 603,
     "date": "2026-10-24",
-    "ts": 1792800490.6918387
+    "ts": 1792806220.587931
   },
   "8081": {
     "name": "Jana Hossam Salah",
     "country": "egy",
     "rank": 846,
     "date": "2026-10-24",
-    "ts": 1792805626.2953806
+    "ts": 1792806220.5684276
   },
   "12596": {
     "name": "Jenna Defalco",
     "country": "usa",
     "rank": 875,
     "date": "2026-10-24",
-    "ts": 1792805626.2953806
+    "ts": 1792806220.5684276
   },
   "1944": {
     "name": "Isaac Becroft",
     "country": "nzl",
     "rank": 613,
     "date": "2026-10-24",
-    "ts": 1792805626.2974102
+    "ts": 1792806220.5695171
+  },
+  "5088": {
+    "name": "Alexander Guajardo",
+    "country": "usa",
+    "rank": 2148,
+    "date": "2026-10-24",
+    "ts": 1792806220.5938368
+  },
+  "885": {
+    "name": "Kamilla Rakhimova",
+    "country": "uzb",
+    "rank": 67,
+    "date": "2026-10-24",
+    "ts": 1792806220.5949538
+  },
+  "2712": {
+    "name": "Shiho Tsujioka",
+    "country": "jpn",
+    "rank": 858,
+    "date": "2026-10-24",
+    "ts": 1792806220.5949538
+  },
+  "304": {
+    "name": "Yuliia Starodubtseva",
+    "country": "ukr",
+    "rank": 50,
+    "date": "2026-10-24",
+    "ts": 1792806220.5960739
+  },
+  "548": {
+    "name": "Aliaksandra Sasnovich",
+    "country": "blr",
+    "rank": 122,
+    "date": "2026-10-24",
+    "ts": 1792806220.5960739
   }
 }
