@@ -1202,6 +1202,66 @@
     "q": false
   },
   {
+    "id": 209498,
+    "date": "2026-10-24",
+    "tournament": "Vienna",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Fabian Marozsan",
+      "country": "hun"
+    },
+    "p2": {
+      "name": "Sebastian Sorger",
+      "country": "aut"
+    },
+    "games": [
+      [
+        3,
+        6,
+        6
+      ],
+      [
+        6,
+        4,
+        4
+      ]
+    ],
+    "winner": 1,
+    "tour": "atp",
+    "gender": "men",
+    "q": false
+  },
+  {
+    "id": 209499,
+    "date": "2026-10-24",
+    "tournament": "Vienna",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Corentin Moutet",
+      "country": "fra"
+    },
+    "p2": {
+      "name": "Tomas Machac",
+      "country": "cze"
+    },
+    "games": [
+      [
+        4,
+        4
+      ],
+      [
+        6,
+        6
+      ]
+    ],
+    "winner": 2,
+    "tour": "atp",
+    "gender": "men",
+    "q": false
+  },
+  {
     "id": 208297,
     "date": "2026-10-23",
     "tournament": "ITF M25 Mumbai 2 Men Doubles",
