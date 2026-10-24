@@ -869,7 +869,15 @@ def maybe_post(m, out_dir):
     pdir = os.path.join(out_dir, "post")
     os.makedirs(pdir, exist_ok=True)
     png = render_match_photo(d, os.path.join(pdir, f"final-{m.get('id')}.png"))
-    save_caption(png, "final", dict(slim(m), reasons=why))
+    _facts = dict(slim(m), reasons=why)
+    _rw, _rl = pw.get("ranking"), pl.get("ranking")
+    if isinstance(_rw, int):
+        _facts["rank_winner"] = _rw
+    if isinstance(_rl, int):
+        _facts["rank_loser"] = _rl
+    if isinstance(_rw, int) and isinstance(_rl, int) and _rw > _rl:
+        _facts["ranking_gap"] = _rw - _rl
+    save_caption(png, "final", _facts)
     posts.setdefault(today, []).append({"id": m.get("id"), "score": score, "reasons": why, "file": os.path.basename(png)})
     keep = sorted(posts)[-14:]
     posts = {k: posts[k] for k in keep}
