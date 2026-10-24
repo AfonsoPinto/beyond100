@@ -167,7 +167,11 @@ def send():
         print("Fila vazia.")
         return
     backend = os.environ.get("PUBLISH_BACKEND", "webhook")
+    limit = time.strftime("%Y-%m-%d", time.gmtime(time.time() - 36 * 3600))
     for d, e in pending:
+        if d < limit:                           # stale: posts antigos na fila não são enviados de uma vez
+            e["sent"], e["skipped"] = True, "stale"
+            continue
         url = f"{SITE_URL}/posts/{e['image']}"
         try:
             if backend == "graph":

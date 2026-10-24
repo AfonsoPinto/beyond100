@@ -687,6 +687,9 @@ PHOTO_BONUS = float(_env("PHOTO_BONUS", "2"))          # bónus se o vencedor te
 NO_PHOTO_EXTRA = float(_env("NO_PHOTO_EXTRA", "1"))   # sem foto, o limiar sobe
 UPSET_GAP = int(os.environ.get("UPSET_GAP", "80"))
 UPSET_MAX_LOSER_RANK = int(_env("UPSET_MAX_LOSER_RANK", "250"))   # o derrotado tem de ser top 250 para contar como surpresa
+TOUR_MIN_RANK = int(_env("TOUR_MIN_RANK", "50"))                     # no Tour, o vencedor tem de estar fora do top N (ranking > N)
+POST_LEVELS = {x.strip() for x in _env("POST_LEVELS", "challenger,tour").lower().split(",") if x.strip()}   # níveis que geram post: challenger,tour,itf
+REQUIRE_PHOTO = _env("REQUIRE_PHOTO", "1") == "1"                      # só publica se o vencedor tiver foto licenciada
 MIN_ITF_TIER = int(_env("MIN_ITF_TIER", "60"))                      # ITF só é publicado a partir de W60/M60 (M15/M25/W35... ficam só no site)   # diferença mínima de ranking para ser "surpresa"
 RISING_MAX_JUMP = 150                                 # saltos maiores são tratados como erro nos dados
 RANK_MAX_AGE_D = 60                                   # só compara com rankings vistos nos últimos 60 dias
@@ -766,7 +769,7 @@ def interest(m):
     score, why = 0.0, []
     if m.get("is_qualifying"):                       # qualificação: só no site
         return 0.0, []
-    lv = int(_priority(m))
+    lv = int(_priority(m))                          # a parte decimal é só desempate
     score += {0: 3, 1: 2, 2: 0.5, 3: 0}[lv]
     if lv <= 1:
         why.append({0: "tour", 1: "challenger"}[lv])
@@ -785,6 +788,8 @@ def interest(m):
         why.append("top100")
         if best <= 50:
             score += 1
+    elif best <= 150:                                # zona 100-150: perto do top 100, mais provável ter foto
+        score += 1
     g = (m.get("score") or {}).get("games") or [[], []]
     if g[0] and len(g[0]) == len(g[1]):
         mine, other = (g[0], g[1]) if w == 1 else (g[1], g[0])
@@ -821,6 +826,15 @@ def maybe_post(m, out_dir):
     import webapp
     import re as _re
     _g, _k, _lv, _tag = webapp.classify(webapp.api_view(m))
+    if _lv not in POST_LEVELS:
+        print(f"Jogo {m.get('id')}: nível '{_lv}' não gera posts (POST_LEVELS={','.join(sorted(POST_LEVELS))}), fica só no site.")
+        return None
+    if _lv == "tour":
+        _w0 = winner_index(m)
+        _rk = ((m.get("players") or {}).get("p%d" % _w0) or {}).get("ranking") if _w0 else None
+        if isinstance(_rk, int) and _rk <= TOUR_MIN_RANK:
+            print(f"Jogo {m.get('id')}: Tour, vencedor ranking {_rk} (<= {TOUR_MIN_RANK}), fica só no site.")
+            return None
     if _lv == "itf":
         _n = _re.search(r"(\d+)", _tag or "")
         if not _n or int(_n.group(1)) < MIN_ITF_TIER:
@@ -831,6 +845,9 @@ def maybe_post(m, out_dir):
     _w = winner_index(m)
     has_photo = bool(_w and find_photo(m["players"]["p%d" % _w])[0])
     score += PHOTO_BONUS if has_photo else 0
+    if REQUIRE_PHOTO and not has_photo:
+        print(f"Jogo {m.get('id')}: sem foto licenciada do vencedor, fica só no site.")
+        return None
     need = POST_MIN_SCORE + (0 if has_photo else NO_PHOTO_EXTRA)
     if score < need:
         print(f"Jogo {m.get('id')}: interesse {score:g} (< {need:g}{'' if has_photo else ', sem foto'}), fica só no site.")
@@ -877,6 +894,9 @@ def rising_cards(m, out_dir):
         pl = next((((m.get("players") or {}).get(k) or {}) for k in ("p1", "p2")
                    if ((m.get("players") or {}).get(k) or {}).get("name") == e["player"]), {"name": e["player"]})
         fp, credit = find_photo(pl)
+        if REQUIRE_PHOTO and not fp:
+            print(f"Notícia de ranking de {e['player']}: sem foto licenciada, não é publicada.")
+            continue
         women = webapp.classify(webapp.api_view(m))[0] == "women"
         d = {"player": e["player"], "rank_now": e["rank_now"], "rank_before": e["rank_before"],
              "system": "WTA" if women else "ATP", "headline": e["headline"].rstrip("."),
@@ -948,7 +968,10 @@ def _priority(m):
     """Menor = mais importante: Tour, Challenger, ITF; depois o resto. Qualificação vale menos."""
     import webapp
     _, _, level, _ = webapp.classify(webapp.api_view(m))
-    return webapp.LEVEL_ORDER.get(level, 3) + (0.5 if m.get("is_qualifying") else 0)
+    # desempate: jogos com jogadores mais bem ranqueados primeiro (mais fotos livres, mais interesse)
+    ranks = [((m.get("players") or {}).get(k) or {}).get("ranking") for k in ("p1", "p2")]
+    best = min([r for r in ranks if isinstance(r, int)] or [900])
+    return webapp.LEVEL_ORDER.get(level, 3) + (0.5 if m.get("is_qualifying") else 0) + min(best, 900) / 10000
 
 
 def has_portuguese(m):
