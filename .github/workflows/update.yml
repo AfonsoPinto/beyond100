@@ -21,10 +21,13 @@ jobs:
         env:
           LIVETENNIS_KEY: ${{ secrets.LIVETENNIS_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FETCH_PHOTOS: "1"
+          WIKI_CONTACT: ${{ vars.WIKI_CONTACT }}
         run: |
           python result_card.py --live --track-only --max 3 --out out
           python result_card.py --results --max-checks 2 --out out
           python weekly.py out
+          python stories.py out
           python publisher.py prepare out
           python result_card.py --page
       - name: Keep new cards and captions (7 days)
@@ -40,10 +43,11 @@ jobs:
           git config user.name "beyond100-bot"
           git config user.email "bot@users.noreply.github.com"
           git pull --rebase --autostash || true
-          for f in tracked.json results.json ranks.json posts.json carousels.json; do
+          for f in tracked.json results.json ranks.json posts.json carousels.json stories.json; do
             if [ -f "$f" ]; then git add -f "$f"; fi
           done
           if [ -d posts ]; then git add -A -f posts; fi
+          if [ -d photos ]; then git add -A -f photos; fi
           if ! git diff --cached --quiet; then git commit -m "Update state"; git push; fi
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
@@ -57,10 +61,13 @@ jobs:
           PUBLISH_BACKEND: ${{ vars.PUBLISH_BACKEND }}
           MAKE_WEBHOOK_URL: ${{ secrets.MAKE_WEBHOOK_URL }}
           MAKE_WEBHOOK_CAROUSEL_URL: ${{ secrets.MAKE_WEBHOOK_CAROUSEL_URL }}
+          MAKE_WEBHOOK_STORY_URL: ${{ secrets.MAKE_WEBHOOK_STORY_URL }}
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
         run: python publisher.py send
       - name: Save sent flags
         run: |
-          git add -f posts.json carousels.json 2>/dev/null || git add -f posts.json || true
+          for f in posts.json carousels.json stories.json; do
+            if [ -f "$f" ]; then git add -f "$f"; fi
+          done
           if ! git diff --cached --quiet; then git commit -m "Update posts"; git pull --rebase --autostash || true; git push; fi
