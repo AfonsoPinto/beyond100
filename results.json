@@ -776,5 +776,31 @@
       ]
     ],
     "winner": 2
+  },
+  {
+    "id": 208286,
+    "date": "2026-10-23",
+    "tournament": "ITF W35 Bakersfield, CA Women",
+    "round": "Round of 16",
+    "surface": "hard",
+    "p1": {
+      "name": "Vivian Wolff",
+      "country": "usa"
+    },
+    "p2": {
+      "name": "Yaroslava Bartashevich",
+      "country": "fra"
+    },
+    "games": [
+      [
+        2,
+        1
+      ],
+      [
+        6,
+        6
+      ]
+    ],
+    "winner": 2
   }
 ]
