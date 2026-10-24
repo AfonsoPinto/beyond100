@@ -40,7 +40,25 @@ def classify(r):
         level, tag = "tour", "ATP" if "ATP" in t else "WTA"
     else:
         level, tag = "other", ""
+    # a API traz o circuito (tour) e o género: é mais fiável do que o nome do torneio
+    if r.get("gender") in ("men", "women"):
+        gender = r["gender"]
+    tour = (r.get("tour") or "").lower()
+    if tour:
+        if "challenger" in tour or "125" in tour:
+            level, tag = "challenger", ("WTA 125" if gender == "women" else "Challenger")
+        elif tour in ("atp", "wta"):
+            level, tag = "tour", tour.upper()
+        elif "itf" in tour:
+            level, tag = "itf", (("ITF " + m.group(1) + m.group(2)) if m else "ITF")
     return gender, kind, level, tag
+
+
+def api_view(m):
+    """Jogo cru da API -> dicionário que o classify() percebe (nome, circuito, género)."""
+    pl = m.get("players") or {}
+    return {"tournament": m.get("tournament", ""), "tour": m.get("tour"), "gender": m.get("gender"),
+            "p1": {"name": (pl.get("p1") or {}).get("name", "")}, "p2": {"name": (pl.get("p2") or {}).get("name", "")}}
 
 
 def _round_rank(rd):
@@ -121,7 +139,108 @@ def prepare(results, tr):
     return out
 
 
+def _date_key(r):
+    return (r.get("date", ""), -_round_rank(r.get("round")))      # mais tarde = mais recente
+
+
+def player_table(results):
+    """Vitórias/derrotas e sequência por jogador (só singulares terminados)."""
+    stats = {}
+    for r in sorted([x for x in results if classify(x)[1] == "singles" and x.get("winner") in (1, 2)], key=_date_key):
+        for i in (1, 2):
+            p = r["p%d" % i]
+            st = stats.setdefault(p["name"], {"name": p["name"], "c": (p.get("country") or "").upper(),
+                                              "w": 0, "l": 0, "seq": [], "last": "", "t": ""})
+            won = r["winner"] == i
+            st["w" if won else "l"] += 1
+            st["seq"].append(won)
+            st["last"], st["t"] = r.get("date", ""), base_tournament(r.get("tournament", ""))
+    out = []
+    for st in stats.values():
+        n, cur = 0, st["seq"][-1]
+        for v in reversed(st["seq"]):
+            if v != cur:
+                break
+            n += 1
+        st["streak"] = ("W" if cur else "L") + str(n)
+        st["sn"] = n if cur else -n
+        out.append(st)
+    out.sort(key=lambda x: (-x["w"], x["l"], x["name"]))
+    return out
+
+
+def players_page(results, tx):
+    esc = html.escape
+    rows = player_table(results)
+    if not rows:
+        return f'<section class="page-h"><h1>{esc(tx.get("players", "Players"))}</h1><p class="empty">{esc(tx.get("empty", ""))}</p></section>'
+    body = "".join(
+        f'<tr><td class="pn">{esc(r["name"])} <small>{esc(r["c"])}</small></td><td>{r["w"]}-{r["l"]}</td>'
+        f'<td class="{"hot" if r["sn"] >= 3 else ""}">{r["streak"]}</td><td class="lt">{esc(r["t"])} · {esc(r["last"])}</td></tr>'
+        for r in rows[:400])
+    return (f'<section class="page-h"><h1>{esc(tx.get("players", "Players"))}</h1>'
+            f'<p>{esc(tx.get("players_lead", "Wins, losses and streaks from the matches we track."))}</p>'
+            f'<input id="q" class="srch" placeholder="{esc(tx.get("search", "Search a player"))}"></section>'
+            f'<table class="pt"><thead><tr><th>{esc(tx.get("player", "Player"))}</th><th>W-L</th>'
+            f'<th>{esc(tx.get("streak", "Streak"))}</th><th>{esc(tx.get("last", "Last match"))}</th></tr></thead>'
+            f'<tbody id="pb">{body}</tbody></table>'
+            '<script>document.getElementById("q").addEventListener("input",function(e){var v=e.target.value.toLowerCase();'
+            'document.querySelectorAll("#pb tr").forEach(function(r){r.style.display=r.textContent.toLowerCase().indexOf(v)<0?"none":""})})</script>')
+
+
+def week_numbers(results, days=7):
+    """Números dos últimos `days` dias, para o bloco da página inicial."""
+    import datetime as dt
+    today = dt.datetime.now(dt.timezone.utc).date()
+    start = (today - dt.timedelta(days=days - 1)).isoformat()
+    rs = [r for r in results if r.get("date", "") >= start and classify(r)[1] == "singles"]
+    n = {"matches": 0, "three": 0, "tb": 0, "comebacks": 0, "bagels": 0, "finals": 0}
+    tourn, wins = set(), {}
+    for r in rs:
+        st = match_stats(r)
+        if not st:
+            continue
+        n["matches"] += 1
+        tourn.add(base_tournament(r.get("tournament", "")))
+        n["three"] += 1 if len(r["games"][0]) >= 3 else 0
+        n["tb"] += st[2]
+        n["comebacks"] += 1 if "comeback" in st[0] else 0
+        n["bagels"] += 1 if "bagel" in st[0] else 0
+        n["finals"] += 1 if (r.get("round") or "").strip().lower() in ("final", "finals") else 0
+        w = r["p%d" % r["winner"]]["name"]
+        wins[w] = wins.get(w, 0) + 1
+    top = max(wins.items(), key=lambda kv: (kv[1], kv[0])) if wins else None
+    n["tournaments"] = len(tourn)
+    n["top"] = top if top and top[1] >= 2 else None
+    return n
+
+
+def week_block(n, tx):
+    esc = html.escape
+    if n["matches"] < 3:
+        return ""
+    tiles = [(n["matches"], tx.get("w_matches", "matches")), (n["tournaments"], tx.get("w_tourn", "tournaments")),
+             (n["three"], tx.get("w_three", "three-setters")), (n["tb"], tx.get("w_tb", "tie-breaks")),
+             (n["comebacks"], tx.get("w_comeback", "comebacks")), (n["bagels"], tx.get("w_bagel", "6-0 sets"))]
+    h = "".join(f'<div class="nbox"><b>{v}</b><span>{esc(str(l))}</span></div>' for v, l in tiles)
+    top = (f'<p class="topw">{esc(tx.get("w_top", "Most wins"))}: <b>{esc(n["top"][0])}</b> ({n["top"][1]})</p>' if n["top"] else "")
+    return (f'<h2 class="sec"><span>{esc(tx.get("week", "This week in numbers"))}</span>'
+            f'<a href="players.html">{esc(tx.get("players", "Players"))} →</a></h2><div class="numgrid">{h}</div>{top}')
+
+
 CSS = """
+.numgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 10px}
+.nbox{background:var(--deep);border:1px solid var(--e);border-radius:16px;padding:14px;text-align:center}
+.nbox b{display:block;font:700 2rem Georgia,serif;color:var(--v)}
+.nbox span{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--s)}
+.topw{color:var(--s);margin:4px 0 22px}.topw b{color:var(--c)}
+.srch{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--e);background:var(--deep);color:var(--c);font-size:1rem;margin-top:8px}
+.pt{width:100%;border-collapse:collapse;margin:14px 0 30px}
+.pt th{font:600 .75rem system-ui;letter-spacing:.08em;text-transform:uppercase;color:var(--s);text-align:left;padding:8px 6px;border-bottom:1px solid var(--e)}
+.pt td{padding:10px 6px;border-bottom:1px solid #123f31}
+.pt .pn{font-family:Georgia,serif;font-weight:700}.pt small{color:var(--s);font-weight:400}
+.pt .hot{color:var(--v);font-weight:700}.pt .lt{color:var(--s);font-size:.85rem}
+@media(max-width:560px){.pt .lt{display:none}.pt th:last-child{display:none}.numgrid{grid-template-columns:repeat(2,1fr)}}
 :root{--g:#0e3a2d;--deep:#09281f;--c:#f7f2e6;--v:#d9f23d;--s:#b0c4b7;--e:#2c5d4c}
 *{box-sizing:border-box}
 body{margin:0;background:var(--g);color:var(--c);font:16px/1.5 system-ui,"Segoe UI",Arial,sans-serif}
