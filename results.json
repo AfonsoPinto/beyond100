@@ -654,6 +654,66 @@
     "q": false
   },
   {
+    "id": 209550,
+    "date": "2026-10-24",
+    "tournament": "ITF W15 Bol 2 Women",
+    "round": "Quarterfinals",
+    "surface": "clay",
+    "p1": {
+      "name": "Mia Horvit",
+      "country": "usa"
+    },
+    "p2": {
+      "name": "Daria Gorska",
+      "country": "pol"
+    },
+    "games": [
+      [
+        7,
+        7
+      ],
+      [
+        5,
+        6
+      ]
+    ],
+    "winner": 1,
+    "tour": "itf",
+    "gender": "women",
+    "q": false
+  },
+  {
+    "id": 209529,
+    "date": "2026-10-24",
+    "tournament": "M15 Bol 2",
+    "round": "Quarter-finals",
+    "surface": "clay",
+    "p1": {
+      "name": "Nico Hipfl",
+      "country": "aut"
+    },
+    "p2": {
+      "name": "Ivan Biletić",
+      "country": "bih"
+    },
+    "games": [
+      [
+        6,
+        6,
+        1
+      ],
+      [
+        7,
+        2,
+        0
+      ]
+    ],
+    "winner": 0,
+    "tour": "itf",
+    "gender": "men",
+    "q": false
+  },
+  {
     "id": 208297,
     "date": "2026-10-23",
     "tournament": "ITF M25 Mumbai 2 Men Doubles",
