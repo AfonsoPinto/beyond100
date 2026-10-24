@@ -424,8 +424,10 @@ def fetch_match(match_id):
 
 # ---------- acompanhamento mínimo (só ids, para respeitar os termos de armazenamento) ----------
 STATE_FILE = "tracked.json"
-MIN_AGE_BEFORE_CHECK_S = 45 * 60
-MAX_TRACKED = 12
+MIN_AGE_BEFORE_CHECK_S = int(os.environ.get("MIN_AGE_MIN") or "45") * 60   # execuções manuais podem baixar isto
+MAX_TRACKED = int(os.environ.get("MAX_TRACKED") or "12")
+TRACK_MAX_PRIO = int(os.environ.get("TRACK_MAX_PRIO") or "2")             # 1 = só Tour+Challenger gastam quota; 2 = também ITF
+PRIO_FILE = "tracked_prio.json"                                          # id -> prioridade (0 Tour, 1 Challenger, 2 ITF, 3 resto)
 TRACK_MAX_AGE_H = 48  # ids mais antigos são apagados
 
 
@@ -440,6 +442,19 @@ def load_state():
 def save_state(state):
     with open(STATE_FILE, "w", encoding="utf-8") as f:
         json.dump(state, f, indent=2)
+
+
+def load_prio():
+    try:
+        with open(PRIO_FILE, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+def save_prio(prio):
+    with open(PRIO_FILE, "w", encoding="utf-8") as f:
+        json.dump(prio, f, indent=2)
 
 
 def track(ids):
@@ -930,7 +945,8 @@ def run_results(out_dir, max_checks):
     os.makedirs(out_dir, exist_ok=True)
     checks = 0
     try:
-        for mid in list(state):
+        prio = load_prio()
+        for mid in sorted(state, key=lambda k: (prio.get(k, 3), state[k])):     # Tour e Challenger primeiro
             if now - state[mid] < MIN_AGE_BEFORE_CHECK_S:
                 continue                      # jogo acompanhado há pouco: é improvável que já tenha acabado
             if checks >= max_checks:
@@ -964,6 +980,7 @@ def run_results(out_dir, max_checks):
                 state[mid] = state.pop(mid)   # vai para o fim da fila: os outros jogos também são verificados
     finally:
         save_state(state)                     # mesmo com erro inesperado, o progresso não se perde
+        save_prio({k: v for k, v in prio.items() if k in state})
 
 
 def is_doubles_match(m):
@@ -1060,9 +1077,27 @@ if __name__ == "__main__":
                 print("Notícia:", pth)
         if a.track_only:
             state = load_state()
-            room = max(0, MAX_TRACKED - len(state))      # fila curta: a quota só dá para verificar poucos jogos
-            fresh = [m for m in matches if is_live(m) and str(m["id"]) not in state][: min(a.max, room)]
-            track([m["id"] for m in fresh])
-            print(f"Acompanhados: {len(state)} + {len(fresh)} novos (máx. {MAX_TRACKED}).")
+            prio = load_prio()
+            added = 0
+            for m in [m for m in matches if is_live(m) and str(m["id"]) not in state]:
+                if added >= a.max:
+                    break
+                mp = int(_priority(m))
+                if mp > TRACK_MAX_PRIO:
+                    continue
+                if len(state) >= MAX_TRACKED:
+                    # lista cheia: um jogo de Tour/Challenger tira o lugar ao de menor prioridade (ITF/resto)
+                    victims = [k for k in state if prio.get(k, 3) > max(mp, 1)]
+                    if mp > 1 or not victims:
+                        continue
+                    victim = max(victims, key=lambda k: (prio.get(k, 3), -state[k]))
+                    del state[victim]
+                    prio.pop(victim, None)
+                state[str(m["id"])] = time.time()
+                prio[str(m["id"])] = mp
+                added += 1
+            save_state(state)
+            save_prio({k: v for k, v in prio.items() if k in state})
+            print(f"Acompanhados: {len(state)} (+{added} novos, máx. {MAX_TRACKED}).")
         else:
             track([m["id"] for m in shown if is_live(m)])
