@@ -856,5 +856,31 @@
       ]
     ],
     "winner": 1
+  },
+  {
+    "id": 209522,
+    "date": "2026-10-23",
+    "tournament": "ITF W35 Bakersfield, CA Women",
+    "round": "Quarterfinals",
+    "surface": "hard",
+    "p1": {
+      "name": "Lan Mi",
+      "country": "chn"
+    },
+    "p2": {
+      "name": "Yaroslava Bartashevich",
+      "country": "fra"
+    },
+    "games": [
+      [
+        7,
+        6
+      ],
+      [
+        5,
+        4
+      ]
+    ],
+    "winner": 1
   }
 ]
