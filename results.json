@@ -184,6 +184,62 @@
     "winner": 2
   },
   {
+    "id": 208372,
+    "date": "2026-10-24",
+    "tournament": "M25 Tamworth",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Isaac Becroft",
+      "country": "nzl"
+    },
+    "p2": {
+      "name": "Casey Hoole",
+      "country": "aus"
+    },
+    "games": [
+      [
+        6,
+        6,
+        6
+      ],
+      [
+        7,
+        3,
+        4
+      ]
+    ],
+    "winner": 1
+  },
+  {
+    "id": 208367,
+    "date": "2026-10-24",
+    "tournament": "M15 Tanagura",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Yuto Oki",
+      "country": "jpn"
+    },
+    "p2": {
+      "name": "Takuya Kumasaka",
+      "country": "jpn"
+    },
+    "games": [
+      [
+        4,
+        6,
+        6
+      ],
+      [
+        6,
+        3,
+        4
+      ]
+    ],
+    "winner": 1
+  },
+  {
     "id": 208297,
     "date": "2026-10-23",
     "tournament": "ITF M25 Mumbai 2 Men Doubles",

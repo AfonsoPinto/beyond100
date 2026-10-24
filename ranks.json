@@ -220,8 +220,8 @@
     "name": "Jie Cui",
     "country": "chn",
     "rank": 448,
-    "date": "2026-10-23",
-    "ts": 1792742360.4369478
+    "date": "2026-10-24",
+    "ts": 1792818485.2554426
   },
   "1016": {
     "name": "Akira Santillan",
@@ -1355,7 +1355,7 @@
     "country": "aus",
     "rank": 445,
     "date": "2026-10-24",
-    "ts": 1792800490.6722364
+    "ts": 1792818485.2344306
   },
   "1987": {
     "name": "Herman Hoeyeraal",
@@ -1376,7 +1376,7 @@
     "country": "aus",
     "rank": 874,
     "date": "2026-10-24",
-    "ts": 1792804085.5137987
+    "ts": 1792818485.2344306
   },
   "2624": {
     "name": "Mio Mushika",
@@ -1537,28 +1537,28 @@
     "country": "usa",
     "rank": 55,
     "date": "2026-10-24",
-    "ts": 1792814884.5965993
+    "ts": 1792818485.246089
   },
   "649": {
     "name": "Ann Li",
     "country": "usa",
     "rank": 25,
     "date": "2026-10-24",
-    "ts": 1792814884.5965993
+    "ts": 1792818485.246089
   },
   "1196": {
     "name": "Polina Iatcenko",
     "country": "rus",
     "rank": 154,
     "date": "2026-10-24",
-    "ts": 1792814884.6018488
+    "ts": 1792818485.2412941
   },
   "1905": {
     "name": "Alexandra Shubladze",
     "country": "rus",
     "rank": 136,
     "date": "2026-10-24",
-    "ts": 1792814884.6018488
+    "ts": 1792818485.2412941
   },
   "251": {
     "name": "Polina Kudermetova",
@@ -1572,49 +1572,49 @@
     "country": "rus",
     "rank": 175,
     "date": "2026-10-24",
-    "ts": 1792814884.6001194
+    "ts": 1792818485.2436128
   },
   "920": {
     "name": "Ergi Kirkin",
     "country": "tur",
     "rank": 646,
     "date": "2026-10-24",
-    "ts": 1792814884.586281
+    "ts": 1792818485.2205694
   },
   "1935": {
     "name": "Taisei Ichikawa",
     "country": "jpn",
     "rank": 746,
     "date": "2026-10-24",
-    "ts": 1792814884.586281
+    "ts": 1792818485.2205694
   },
   "1074": {
     "name": "Varvara Panshina",
     "country": "rus",
     "rank": 372,
     "date": "2026-10-24",
-    "ts": 1792814884.588267
+    "ts": 1792818485.227521
   },
   "4921": {
     "name": "Daria Khomutsianskaya",
     "country": null,
     "rank": 274,
     "date": "2026-10-24",
-    "ts": 1792814884.588267
+    "ts": 1792818485.227521
   },
   "1059": {
     "name": "Rada Zolotareva",
     "country": "rus",
     "rank": 342,
     "date": "2026-10-24",
-    "ts": 1792814884.5899816
+    "ts": 1792818485.2252266
   },
   "1113": {
     "name": "Xinxin Yao",
     "country": "chn",
     "rank": 270,
     "date": "2026-10-24",
-    "ts": 1792814884.5899816
+    "ts": 1792818485.2252266
   },
   "193": {
     "name": "Coleman Chak Lam Wong",
@@ -1635,34 +1635,83 @@
     "country": "jpn",
     "rank": 306,
     "date": "2026-10-24",
-    "ts": 1792814884.6001194
+    "ts": 1792818485.2436128
   },
   "41": {
     "name": "Alycia Parks",
     "country": "usa",
     "rank": 64,
     "date": "2026-10-24",
-    "ts": 1792814884.603639
+    "ts": 1792818485.2483933
   },
   "12787": {
     "name": "Ena Shibahara",
     "country": "jpn",
     "rank": 492,
     "date": "2026-10-24",
-    "ts": 1792814884.603639
+    "ts": 1792818485.2483933
   },
   "1003": {
     "name": "Liudmila Samsonova",
     "country": "rus",
     "rank": 43,
     "date": "2026-10-24",
-    "ts": 1792814884.6053128
+    "ts": 1792818485.2507331
   },
   "1206": {
     "name": "Heather Watson",
     "country": "gbr",
     "rank": 384,
     "date": "2026-10-24",
-    "ts": 1792814884.6053128
+    "ts": 1792818485.2507331
+  },
+  "1885": {
+    "name": "Maxime Janvier",
+    "country": "fra",
+    "rank": 647,
+    "date": "2026-10-24",
+    "ts": 1792818485.2229285
+  },
+  "2057": {
+    "name": "Kosuke Ogura",
+    "country": "jpn",
+    "rank": 795,
+    "date": "2026-10-24",
+    "ts": 1792818485.2229285
+  },
+  "946": {
+    "name": "Karan Singh",
+    "country": "ind",
+    "rank": 437,
+    "date": "2026-10-24",
+    "ts": 1792818485.2297761
+  },
+  "8068": {
+    "name": "Chirag Duhan",
+    "country": "ind",
+    "rank": 937,
+    "date": "2026-10-24",
+    "ts": 1792818485.2297761
+  },
+  "590": {
+    "name": "Garrett Johns",
+    "country": "usa",
+    "rank": 458,
+    "date": "2026-10-24",
+    "ts": 1792818485.2320666
+  },
+  "959": {
+    "name": "Digvijay Pratap Singh",
+    "country": "ind",
+    "rank": 460,
+    "date": "2026-10-24",
+    "ts": 1792818485.2320666
+  },
+  "117": {
+    "name": "Tristan Schoolkate",
+    "country": "aus",
+    "rank": 169,
+    "date": "2026-10-24",
+    "ts": 1792818485.2554426
   }
 }
