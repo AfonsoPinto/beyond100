@@ -1140,6 +1140,68 @@
     "q": false
   },
   {
+    "id": 209556,
+    "date": "2026-10-24",
+    "tournament": "Lyon (France)",
+    "round": "Semi-finals",
+    "surface": "clay",
+    "p1": {
+      "name": "Flavio Cobolli",
+      "country": "ita"
+    },
+    "p2": {
+      "name": "Lorenzo Musetti",
+      "country": "ita"
+    },
+    "games": [
+      [
+        6,
+        2,
+        5
+      ],
+      [
+        4,
+        6,
+        7
+      ]
+    ],
+    "winner": 2,
+    "tour": "atp",
+    "gender": "men",
+    "q": false
+  },
+  {
+    "id": 209470,
+    "date": "2026-10-24",
+    "tournament": "Brussels",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Francisco Cerundolo",
+      "country": "arg"
+    },
+    "p2": {
+      "name": "Tallon Griekspoor",
+      "country": "ned"
+    },
+    "games": [
+      [
+        6,
+        3,
+        6
+      ],
+      [
+        2,
+        6,
+        7
+      ]
+    ],
+    "winner": 2,
+    "tour": "atp",
+    "gender": "men",
+    "q": false
+  },
+  {
     "id": 208297,
     "date": "2026-10-23",
     "tournament": "ITF M25 Mumbai 2 Men Doubles",
