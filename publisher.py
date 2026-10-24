@@ -20,6 +20,7 @@ from PIL import Image
 POSTS_FILE = "posts.json"
 POSTS_DIR = "posts"
 CAROUSELS_FILE = "carousels.json"
+STORIES_FILE = "stories.json"
 SITE_URL = os.environ.get("SITE_URL", "https://beyond100.pages.dev").rstrip("/")
 KEEP_DAYS = 30
 
@@ -128,6 +129,32 @@ def _send_carousels():
         print(f"Carrossel {c['id']}: enviado.")
 
 
+def _send_stories():
+    try:
+        with open(STORIES_FILE, encoding="utf-8") as f:
+            queue = json.load(f)
+    except (OSError, ValueError):
+        return
+    pending = [c for c in queue if not c.get("sent")]
+    url = os.environ.get("MAKE_WEBHOOK_STORY_URL")
+    if not pending:
+        return
+    if not url:
+        print(f"{len(pending)} stories na fila, mas falta MAKE_WEBHOOK_STORY_URL: nada enviado.")
+        return
+    import requests
+    for c in pending[:3]:                       # no máximo 3 por execução
+        try:
+            requests.post(url, json={"id": c["id"], "image_url": f"{SITE_URL}/posts/{c['image']}"}, timeout=30).raise_for_status()
+        except Exception as ex:
+            print(f"Story {c['id']}: falhou ({type(ex).__name__}), tenta de novo mais tarde.")
+            continue
+        c["sent"], c["sent_at"] = True, time.strftime("%Y-%m-%d %H:%M", time.gmtime())
+        with open(STORIES_FILE, "w", encoding="utf-8") as f:
+            json.dump(queue, f, ensure_ascii=False, indent=2)
+        print(f"Story {c['id']}: enviado.")
+
+
 def send():
     posts = _load()
     pending = [(d, e) for d, es in posts.items() for e in es if e.get("image") and not e.get("sent")]
@@ -135,6 +162,7 @@ def send():
         print(f"{len(pending)} posts na fila, mas PUBLISH_AUTO não está a 1: nada enviado.")
         return
     _send_carousels()
+    _send_stories()
     if not pending:
         print("Fila vazia.")
         return
