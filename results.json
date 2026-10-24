@@ -346,6 +346,58 @@
     "winner": 1
   },
   {
+    "id": 208370,
+    "date": "2026-10-24",
+    "tournament": "M15 Shenzhen (China)",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Filip Peliwo",
+      "country": "pol"
+    },
+    "p2": {
+      "name": "Mikalai Haliak",
+      "country": "BLR"
+    },
+    "games": [
+      [
+        3,
+        3
+      ],
+      [
+        6,
+        6
+      ]
+    ],
+    "winner": 2
+  },
+  {
+    "id": 208371,
+    "date": "2026-10-24",
+    "tournament": "M15 Shenzhen (China)",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Luca Staeheli",
+      "country": "sui"
+    },
+    "p2": {
+      "name": "Boris Butulija",
+      "country": "srb"
+    },
+    "games": [
+      [
+        6,
+        3
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "winner": 1
+  },
+  {
     "id": 208297,
     "date": "2026-10-23",
     "tournament": "ITF M25 Mumbai 2 Men Doubles",

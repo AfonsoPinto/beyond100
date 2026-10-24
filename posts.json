@@ -24,6 +24,17 @@
       "image": "final-208367-2026-10-24.jpg",
       "sent": true,
       "sent_at": "2026-10-24 05:08"
+    },
+    {
+      "id": 208370,
+      "score": 5.5,
+      "reasons": [
+        "semifinal",
+        "upset"
+      ],
+      "file": "final-208370.png",
+      "image": "final-208370-2026-10-24.jpg",
+      "sent": false
     }
   ]
 }
