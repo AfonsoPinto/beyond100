@@ -23,6 +23,7 @@ Requisitos: py -m pip install pillow requests
 Nota: a chave grátis permite ~100 pedidos/dia. Cada execução com --live usa 1.
 """
 import argparse
+import datetime
 import shutil
 import html
 import json
@@ -617,11 +618,22 @@ def _results_html(results, tr, empty):
     return "\n".join(rows) or f'<p class="empty">{esc(empty)}</p>'
 
 
-def _shell(title, body, tx, root=""):
+SITE_BASE = os.environ.get("SITE_URL") or "https://beyond100tennis.com"
+
+
+def _shell(title, body, tx, root="", path="", desc=None):
     esc = html.escape
+    desc = desc or ("Results, rankings and stories from the Challenger and ITF circuit: the tennis beyond the top 100. "
+                    "Daily results, a weekly numbers report and player stats.")
+    seo = (f'<meta name="description" content="{esc(desc)}">\n'
+           f'<link rel="canonical" href="{SITE_BASE}/{path}">\n'
+           f'<meta property="og:type" content="website"><meta property="og:site_name" content="Beyond100">\n'
+           f'<meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">\n'
+           f'<meta property="og:url" content="{SITE_BASE}/{path}">\n'
+           f'<meta name="twitter:card" content="summary">\n')
     return (f'<!doctype html>\n<html lang="{LANG}"><head><meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
-            f'<title>{esc(title)}</title>\n<meta name="theme-color" content="#0e3a2d">\n'
+            f'<title>{esc(title)}</title>\n{seo}<meta name="theme-color" content="#0e3a2d">\n'
             f'<link rel="icon" href="{root}favicon.svg" type="image/svg+xml">\n'
             f'<link rel="icon" href="{root}favicon.png" sizes="192x192" type="image/png">\n'
             f'<link rel="apple-touch-icon" href="{root}favicon.png">\n'
@@ -674,7 +686,7 @@ def build_site(out_dir="site", player=None):
                               ("players.html", webapp.players_page(results, tx), "Beyond100 · " + tx.get("players", "Players"))]:
         path = os.path.join(out_dir, name)
         with open(path, "w", encoding="utf-8") as f:
-            f.write(_shell(title, body, tx))
+            f.write(_shell(title, body, tx, path=name if name != 'index.html' else ''))
         paths.append(path)
     # uma página por torneio (singulares primeiro, pares depois)
     groups = {}
@@ -686,8 +698,19 @@ def build_site(out_dir="site", player=None):
         body = webapp.tournament_page(name, rs, tr, tx)
         path = os.path.join(tdir, webapp.slugify(name) + ".html")
         with open(path, "w", encoding="utf-8") as f:
-            f.write(_shell(f"{name} · Beyond100", body, tx, root="../"))
+            f.write(_shell(f"{name} · Beyond100", body, tx, root="../", path="t/" + os.path.basename(path),
+                           desc=f"{name}: results, scores and draw from the tournament, updated through the week."))
         paths.append(path)
+    urls = [os.path.relpath(x, out_dir).replace(os.sep, "/") for x in paths]
+    urls = ["" if u == "index.html" else u for u in urls]
+    today = datetime.date.today().isoformat()
+    with open(os.path.join(out_dir, "sitemap.xml"), "w", encoding="utf-8") as f:
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+        for u in urls:
+            f.write(f"<url><loc>{SITE_BASE}/{html.escape(u)}</loc><lastmod>{today}</lastmod></url>\n")
+        f.write("</urlset>\n")
+    with open(os.path.join(out_dir, "robots.txt"), "w", encoding="utf-8") as f:
+        f.write(f"User-agent: *\nAllow: /\nSitemap: {SITE_BASE}/sitemap.xml\n")
     return paths
 
 
