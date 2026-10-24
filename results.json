@@ -240,6 +240,58 @@
     "winner": 1
   },
   {
+    "id": 209564,
+    "date": "2026-10-24",
+    "tournament": "UTR PTT Newport Beach Women 25, 9-12 Playoff",
+    "round": "Final",
+    "surface": "grass",
+    "p1": {
+      "name": "Sophia Dumitrascu",
+      "country": "usa"
+    },
+    "p2": {
+      "name": "Saanvi Metta",
+      "country": "usa"
+    },
+    "games": [
+      [
+        6,
+        5
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "winner": 1
+  },
+  {
+    "id": 209565,
+    "date": "2026-10-24",
+    "tournament": "UTR PTT Newport Beach Women 25, 9-12 Playoff",
+    "round": "Match for 3rd place",
+    "surface": "grass",
+    "p1": {
+      "name": "Tiffany Papazian",
+      "country": "usa"
+    },
+    "p2": {
+      "name": "Daniella Clara Suryapranata",
+      "country": "idn"
+    },
+    "games": [
+      [
+        4,
+        2
+      ],
+      [
+        6,
+        3
+      ]
+    ],
+    "winner": 2
+  },
+  {
     "id": 208297,
     "date": "2026-10-23",
     "tournament": "ITF M25 Mumbai 2 Men Doubles",
