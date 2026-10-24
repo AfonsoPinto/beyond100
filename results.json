@@ -1016,6 +1016,68 @@
     "q": false
   },
   {
+    "id": 209407,
+    "date": "2026-10-24",
+    "tournament": "Guangzhou",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Harriet Dart",
+      "country": "gbr"
+    },
+    "p2": {
+      "name": "Shek Ying Cheuk",
+      "country": "hkg"
+    },
+    "games": [
+      [
+        5,
+        7,
+        6
+      ],
+      [
+        7,
+        6,
+        1
+      ]
+    ],
+    "winner": 1,
+    "tour": "wta",
+    "gender": "women",
+    "q": false
+  },
+  {
+    "id": 209582,
+    "date": "2026-10-24",
+    "tournament": "Guangzhou",
+    "round": "Semi-finals",
+    "surface": "hard",
+    "p1": {
+      "name": "Linda Fruhvirtova",
+      "country": "cze"
+    },
+    "p2": {
+      "name": "Mei Yamaguchi",
+      "country": "jpn"
+    },
+    "games": [
+      [
+        6,
+        2,
+        6
+      ],
+      [
+        2,
+        6,
+        7
+      ]
+    ],
+    "winner": 2,
+    "tour": "wta",
+    "gender": "women",
+    "q": false
+  },
+  {
     "id": 208297,
     "date": "2026-10-23",
     "tournament": "ITF M25 Mumbai 2 Men Doubles",
