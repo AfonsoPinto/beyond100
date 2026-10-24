@@ -22,6 +22,10 @@ jobs:
           LIVETENNIS_KEY: ${{ secrets.LIVETENNIS_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FETCH_PHOTOS: "1"
+          POST_MIN_SCORE: ${{ vars.POST_MIN_SCORE }}
+          MAX_POSTS_PER_DAY: ${{ vars.MAX_POSTS_PER_DAY }}
+          NO_PHOTO_EXTRA: ${{ vars.NO_PHOTO_EXTRA }}
+          PHOTO_BONUS: ${{ vars.PHOTO_BONUS }}
           WIKI_CONTACT: ${{ vars.WIKI_CONTACT }}
         run: |
           python result_card.py --live --track-only --max 3 --out out
