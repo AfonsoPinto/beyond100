@@ -87,12 +87,17 @@ def _ask(key, payload, extra=""):
     r = requests.post(
         API_URL,
         headers={"x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json"},
-        json={"model": MODEL, "max_tokens": 300, "system": SYSTEM + extra,
+        json={"model": MODEL, "max_tokens": 1500, "system": SYSTEM + extra,
               "messages": [{"role": "user", "content": payload}]},
         timeout=30,
     )
     r.raise_for_status()
-    return "".join(b.get("text", "") for b in r.json().get("content", []) if b.get("type") == "text").strip()
+    data = r.json()
+    text = "".join(b.get("text", "") for b in data.get("content", []) if b.get("type") == "text").strip()
+    if not text:        # diagnóstico: resposta sem texto (ex.: tokens gastos a "pensar")
+        print("Legenda: resposta vazia | stop_reason:", data.get("stop_reason"),
+              "| blocos:", [b.get("type") for b in data.get("content", [])], "| uso:", data.get("usage"))
+    return text
 
 
 def _make_caption(kind, facts):
@@ -108,6 +113,9 @@ def _make_caption(kind, facts):
         except Exception as e:  # rede, quota, chave inválida...
             print("Legenda: IA indisponível, a usar modelo:", type(e).__name__)
             return fallback(kind, facts)
+        if not text:
+            print(f"Legenda (tentativa {attempt}): resposta vazia.")
+            continue
         bad = sorted(_numbers(text) - allowed)
         banned = sorted({m.group(0).lower() for m in BANNED.finditer(text or "")} - set(BANNED.findall(payload.lower()) if False else []))
         banned = [w for w in banned if w not in payload.lower()]
